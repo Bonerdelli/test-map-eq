@@ -1,0 +1,27 @@
+{
+  "name": "%blank-app%",
+  "version": "0.0.1",
+  "description": "%Blank application template%",
+  "main": "app.js",
+  "authors": [
+    "Andrei Nekrasov <avnk@yandex.ru>"
+  ],
+  "license": "MIT",
+  "homepage": "",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "devDependencies": {
+    "angular": "^1.5.7",
+    "angular-animate": "^1.5.7",
+    "angular-resource": "^1.5.7",
+    "angular-sanitize": "^1.5.7",
+    "angular-touch": "^1.5.7",
+    "ngstorage": "^0.3.10"
+  }
+}

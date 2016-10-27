@@ -1,0 +1,7 @@
+###
+# Common application config
+###
+
+server:
+  port:  4132
+  root:  source/
