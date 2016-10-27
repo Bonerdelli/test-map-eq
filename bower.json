@@ -1,7 +1,7 @@
 {
-  "name": "%blank-app%",
+  "name": "avnk-scanex-test-work-2",
   "version": "0.0.1",
-  "description": "%Blank application template%",
+  "description": "Test work for scanex.ru, part 2",
   "main": "app.js",
   "authors": [
     "Andrei Nekrasov <avnk@yandex.ru>"
@@ -22,6 +22,8 @@
     "angular-resource": "^1.5.7",
     "angular-sanitize": "^1.5.7",
     "angular-touch": "^1.5.7",
-    "ngstorage": "^0.3.10"
+    "ngstorage": "^0.3.10",
+    "heatmap.js-amd": "^2.0.5",
+    "leaflet": "^1.0.1"
   }
 }
