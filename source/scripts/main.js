@@ -19,16 +19,16 @@
       color: '#fff',
       weight: 1,
       opacity: 0,
-      fillOpacity: 0.6
+      // DEBUGGING
+      // fillOpacity: 0.6
+      fillOpacity: 0
     },
     heatMap: {
-      radius: 2,
+      radius: 3,
       maxOpacity: 0.8,
       scaleRadius: true,
       useLocalExtrema: true,
-      latField: 'lat',
-      lngField: 'lng',
-      valueField: 'count'
+      valueField: 'mag'
     }
   };
 
@@ -49,7 +49,7 @@
   }).addTo(map);
 
   // Initialize heatmap layer
-  // var heatmapLayer = new HeatmapOverlay(options.heatMap).addTo(map);
+  var heatmapLayer = new HeatmapOverlay(options.heatMap).addTo(map);
 
   // Initialize vector layer with a points
   var pointsLayer = L.geoJSON(undefined, {
@@ -60,6 +60,42 @@
       layer.bindPopup(feature.properties.place);
     }
   }).addTo(map);
+
+  /**
+   * Sets a new data from GeoJSON
+   */
+  var setData = function(geoJson) {
+    var heatMapData = [];
+    // Add data to a point layer
+    pointsLayer.addData(geoJson);
+    // Prepare data for a heat map
+    for (var i = 0; i < geoJson.features.length; i++) {
+      var item = geoJson.features[i];
+      if (!item.geometry || item.geometry.type !== 'Point') {
+        continue; // Omit non-point fearures
+      }
+      if (!item.properties.mag) {
+        continue; // Omit items without magnitude data
+      }
+      heatMapData.push({
+        lat: item.geometry.coordinates[1],
+        lng: item.geometry.coordinates[0],
+        mag: item.properties.mag
+      });
+    }
+    // Add data to a head map
+    heatmapLayer.setData({
+      data: heatMapData
+    });
+  };
+
+  /**
+   * Cleans all data
+   */
+  var cleanData = function() {
+    pointsLayer.clearLayers();
+    heatmapLayer.setData([]);
+  };
 
   // Requesting GeoJSON data
   var apiUrl = 'http://earthquake.usgs.gov/fdsnws/event/1/query';
@@ -78,8 +114,14 @@
       } catch (e) {
         log.error('Error parsing features data', e);
       }
-      // Add data to a point layer
-      pointsLayer.addData(featuresData);
+      if (featuresData.features.length) {
+        // Set a new data
+        setData(featuresData);
+      } else {
+        // Clean if no data was retrieved
+        cleanData();
+      }
+
     }
   });
 
