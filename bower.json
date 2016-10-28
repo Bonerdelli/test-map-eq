@@ -17,13 +17,8 @@
     "tests"
   ],
   "devDependencies": {
-    "angular": "^1.5.7",
-    "angular-animate": "^1.5.7",
-    "angular-resource": "^1.5.7",
-    "angular-sanitize": "^1.5.7",
-    "angular-touch": "^1.5.7",
-    "ngstorage": "^0.3.10",
+    "leaflet": "^1.0.1",
     "heatmap.js-amd": "^2.0.5",
-    "leaflet": "^1.0.1"
+    "promisejs": "https://github.com/stackp/promisejs.git"
   }
 }

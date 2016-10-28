@@ -1,7 +1,7 @@
-/* globals L */
+/* globals L, HeatmapOverlay, promise */
 'use strict';
 
-(function(L) {
+;(function(L, HeatmapOverlay, promise, log) {
 
   var options = {
     mapBox: {
@@ -12,6 +12,23 @@
       lon: 37.8,
       lat: -96,
       zoom: 4
+    },
+    pointMarkerStyle: {
+      radius: 5,
+      fillColor: '#ff7800',
+      color: '#fff',
+      weight: 1,
+      opacity: 0,
+      fillOpacity: 0.6
+    },
+    heatMap: {
+      radius: 2,
+      maxOpacity: 0.8,
+      scaleRadius: true,
+      useLocalExtrema: true,
+      latField: 'lat',
+      lngField: 'lng',
+      valueField: 'count'
     }
   };
 
@@ -31,4 +48,36 @@
       'Imagery &copy; <a href="http://mapbox.com">Mapbox</a>'
   }).addTo(map);
 
-})(L);
+  // Initialize heatmap layer
+  // var heatmapLayer = new HeatmapOverlay(options.heatMap).addTo(map);
+
+  // Initialize vector layer with a points
+  var pointsLayer = L.geoJSON(undefined, {
+    pointToLayer: function(feature, latlng) {
+      return L.circleMarker(latlng, options.pointMarkerStyle);
+    }
+  }).addTo(map);
+
+  // Requesting GeoJSON data
+  var apiUrl = 'http://earthquake.usgs.gov/fdsnws/event/1/query';
+  promise.get(apiUrl, {
+    format:    'geojson',
+    eventtype: 'earthquake',
+    starttime: '2014-01-01',
+    endtime:   '2014-01-02',
+  }).then(function(error, response, xhr) {
+    if (error) {
+      log.error('Error requesting features data', xhr.status);
+    } else {
+      var featuresData;
+      try {
+        featuresData = JSON.parse(response);
+      } catch (e) {
+        log.error('Error parsing features data', e);
+      }
+      // Add data to a point layer
+      pointsLayer.addData(featuresData);
+    }
+  });
+
+})(L, HeatmapOverlay, promise, console);
