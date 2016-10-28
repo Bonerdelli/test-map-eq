@@ -6,7 +6,7 @@
   var options = {
     mapBox: {
       accessToken: 'pk.eyJ1IjoiYm9uZXJkZWxsaSIsImEiOiJjaWlsY2d5MzYwMDVjdm5tMDhta2N6cXBoIn0.rC98OHIqnN3oQiSnoSKp2g',
-      styleBaseUrl: 'https://api.mapbox.com/styles/v1/mapbox/light-v9'
+      styleBaseUrl: 'https://api.mapbox.com/styles/v1/mapbox/dark-v9'
     },
     defaultPosition: {
       lon: 37.8,
@@ -14,8 +14,8 @@
       zoom: 4
     },
     pointMarkerStyle: {
-      radius: 5,
-      fillColor: '#ff7800',
+      radius: 10,
+      fillColor: '#fc0',
       color: '#fff',
       weight: 1,
       opacity: 0,
@@ -55,6 +55,9 @@
   var pointsLayer = L.geoJSON(undefined, {
     pointToLayer: function(feature, latlng) {
       return L.circleMarker(latlng, options.pointMarkerStyle);
+    },
+    onEachFeature: function(feature, layer) {
+      layer.bindPopup(feature.properties.place);
     }
   }).addTo(map);
 
