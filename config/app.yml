@@ -5,3 +5,6 @@
 server:
   port:  4551
   root:  source/
+
+  # NOTE: this application doesn't have backend at all
+  # so all configuration stored on client side

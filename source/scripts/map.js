@@ -3,6 +3,9 @@
 
 var MapController = (function(L, HeatmapOverlay, EarthquakeResource, log) {
 
+  /**
+   * Leaflet map options
+   */
   var options = {
     mapElementId: 'map',
     mapBox: {
@@ -106,21 +109,20 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, log) {
     heatmapLayer.setData([]);
   };
 
-  /**
-   * Quering earthquakes data
-   */
-  EarthquakeResource.query().then(
-    function(data) {
-      if (data.features.length) {
-        log.info('Retrieved features count:', data.features.length);
-        // Set a new features data
-        MapController.setData(data);
-      } else {
-        // Clean if no data was retrieved
-        MapController.cleanData();
-      }
+  // Registering callback for earthquake resource
+  EarthquakeResource.doAfterQuery(function(data) {
+    if (data.features.length) {
+      log.info('Retrieved features count:', data.features.length);
+      // Set a new features data
+      MapController.setData(data);
+    } else {
+      // Clean if no data was retrieved
+      MapController.cleanData();
     }
-  );
+  });
+
+  // Quering data at startup
+  EarthquakeResource.query();
 
   // Returns factory object
   return MapController;

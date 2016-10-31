@@ -3,6 +3,10 @@
 
 var EarthquakeResource = (function(promise, log) {
 
+  /**
+   * Resource options
+   * NOTE: this example doesn't needed global storage for configuration
+   */
   var apiUrl = 'http://earthquake.usgs.gov/fdsnws/event/1/query';
   var defaultQueryOptions =  {
     format:    'geojson',
@@ -28,37 +32,46 @@ var EarthquakeResource = (function(promise, log) {
     return target;
   };
 
+  var afterQueryCallbacks = [];
   var reloadResource = function(options) {
     options = options || {};
     var deffered = new promise.Promise();
-    var queryOptions = extend(defaultQueryOptions, options);
+    var queryOptions = extend(options, defaultQueryOptions);
     // Quering API with a given options
-    promise.get(apiUrl, queryOptions)
-    .then(function(error, response, xhr) {
-      if (error) {
-        // Reject deffered promise if no data was retrieved
-        log.error('Error requesting features data', xhr.status);
-        deffered.done([]); // NOTE: .reject();
-      } else {
-        var data;
-        try {
-          // Trying parse JSON response
-          data = JSON.parse(response);
-        } catch (e) {
-          // Reject deffered promise if parsing failed
-          log.error('Error parsing features data', e);
-          deffered.done([]); // NOTE: .reject();
+    promise.get(apiUrl, queryOptions).then(
+      function(error, response, xhr) {
+        var data = [];
+        if (error) {
+          // Reject deffered promise if no data was retrieved
+          log.error('Error requesting features data', xhr.status);
+        } else {
+          try {
+            // Trying parse JSON response
+            data = JSON.parse(response);
+          } catch (e) {
+            // Reject deffered promise if parsing failed
+            log.error('Error parsing features data', e);
+          }
         }
         deffered.done(data);
+        afterQueryCallbacks.forEach(function(callback) {
+          callback(data);
+        });
       }
-    });
+    );
     // Returns deffered promise
     return deffered;
   };
 
+  // Register callback that triggered after query completes
+  var doAfterQuery = function(callback) {
+    afterQueryCallbacks.push(callback);
+  };
+
   // Returns factory object
   return {
-    query: reloadResource
+    query: reloadResource,
+    doAfterQuery: doAfterQuery
   };
 
 })(promise, console);
