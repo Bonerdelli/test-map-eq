@@ -4,6 +4,7 @@
 ;(function(L, HeatmapOverlay, promise, log) {
 
   var options = {
+    mapElementId: 'map',
     mapBox: {
       accessToken: 'pk.eyJ1IjoiYm9uZXJkZWxsaSIsImEiOiJjaWlsY2d5MzYwMDVjdm5tMDhta2N6cXBoIn0.rC98OHIqnN3oQiSnoSKp2g',
       styleBaseUrl: 'https://api.mapbox.com/styles/v1/mapbox/dark-v9'
@@ -24,16 +25,22 @@
       fillOpacity: 0
     },
     heatMap: {
-      radius: 3,
+      radius: 2,
       maxOpacity: 0.8,
       scaleRadius: true,
-      useLocalExtrema: true,
-      valueField: 'mag'
+      useLocalExtrema: false,
+      valueField: 'mag',
+      gradient: {
+        0.15: '#05f',
+        0.35: '#0f3',
+        0.55: '#ff0',
+        0.75: '#f00'
+      }
     }
   };
 
   // Initialize leaflet map
-  var map = L.map('map');
+  var map = L.map(options.mapElementId);
 
   // Set coordinates & center of a map
   map.setView([
@@ -80,7 +87,8 @@
       heatMapData.push({
         lat: item.geometry.coordinates[1],
         lng: item.geometry.coordinates[0],
-        mag: item.properties.mag
+        // Scale Richter magnitude to a 0..1 range
+        mag: item.properties.mag / 10
       });
     }
     // Add data to a head map

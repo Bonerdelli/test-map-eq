@@ -9,8 +9,6 @@ var gutil = require('gulp-util');
 var flatten = require('gulp-flatten');
 var gulpif = require('gulp-if');
 var lazypipe = require('lazypipe');
-var rsync  = require('gulp-rsync');
-var zip = require('gulp-zip');
 var del = require('del');
 
 var less = require('gulp-less');
@@ -46,8 +44,7 @@ var path = {
   target: {
     assets: 'source/vendor/',
     less:   'source/styles/vendor/',
-    css:    'source/build/css/',
-    zip:    'temp/'
+    css:    'source/build/css/'
   },
   build: {
     root:   'dist',
@@ -60,7 +57,6 @@ var path = {
     img:    'dist/public/images/',
     fonts:  'dist/public/fonts/',
     assets: 'dist/public',
-    zip:    'dist/**/*',
     json:   'dist/'
   },
   watch: {
@@ -118,24 +114,6 @@ var opts = {
       global_defs: [],
     }
   },
-  /** NOTE: sync with development server settings
-  rsync: {
-    root: path.build.root,
-    destination: '/home/webroot',
-    // NOTE: works only on corporate network
-    // hostname: 'vc-debian.geocyber.ru',
-    hostname: '192.168.100.197',
-    username: 'andrey',
-    emptyDirectories: true,
-    incremental: true,
-    progress: true,
-    relative: true,
-    recursive: true,
-    clean: false,
-    exclude: ['.DS_Store'],
-    include: []
-  },
-  */
   devServer: {
     startFile:  'server/app.js',
   },
@@ -242,14 +220,6 @@ function buildNodeApp() {
     .pipe(gulp.dest(path.build.node));
 }
 
-function zipDist() {
-  // TODO: versioning
-  var fileName = 'dist-0.0.1.zip';
-  return gulp.src(path.build.zip)
-    .pipe(zip(fileName))
-    .pipe(gulp.dest(path.target.zip));
-}
-
 /**
  * Serve delelopment server
  */
@@ -328,7 +298,7 @@ gulp.task('copy', gulp.parallel(
 gulp.task('build', gulp.series(
   'clean', 'copy', 'build:less', gulp.parallel(
     buildHtml, 'build:dist'
-  ), zipDist
+  )
 ));
 
 gulp.task('serve', gulp.series(
@@ -338,11 +308,6 @@ gulp.task('serve', gulp.series(
 gulp.task('serve:dist', gulp.series(
   setDistEnv, serveDist
 ));
-
-gulp.task('deploy', function() {
-  return gulp.src(path.build.sync)
-    .pipe(rsync(opts.rsync));
-});
 
 /**
  * Default task

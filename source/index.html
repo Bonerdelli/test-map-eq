@@ -13,14 +13,22 @@
   </head>
   <body>
     <div id="map" class="map-container"></div>
+    <div class="date-selector">
+      <form id="dateSelectorForm">
+        <input type="text" name="datefrom" value="">
+        <input type="text" name="dateto" value="">
+      </form>
+    </div>
   </body>
   <!-- build:js js/vendor.js -->
   <script src="vendor/leaflet/dist/leaflet-src.js"></script>
   <script src="vendor/heatmap.js-amd/build/heatmap.js"></script>
   <script src="vendor/heatmap.js-amd/plugins/leaflet-heatmap/leaflet-heatmap.js"></script>
   <script src="vendor/promisejs/promise.js"></script>
+  <script src="vendor/pikaday/pikaday.js"></script>
   <!-- endbuild -->
   <!-- build:js js/app.js -->
-  <script src="scripts/main.js"></script>
+  <script src="scripts/map.js"></script>
+  <script src="scripts/controls.js"></script>
   <!-- endbuild -->
 </html>
