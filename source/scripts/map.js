@@ -15,14 +15,12 @@
       zoom: 4
     },
     pointMarkerStyle: {
-      radius: 10,
-      fillColor: '#fc0',
+      radius: 2,
+      fillColor: '#fff',
       color: '#fff',
-      weight: 1,
-      opacity: 0,
-      // DEBUGGING
-      // fillOpacity: 0.6
-      fillOpacity: 0
+      weight: 2,
+      opacity: 0.2,
+      fillOpacity: 1
     },
     heatMap: {
       radius: 2,
