@@ -21,6 +21,7 @@
     "heatmap.js-amd": "^2.0.5",
     "promisejs": "https://github.com/stackp/promisejs.git",
     "pikaday": "^1.5.1",
-    "normalize-css": "^5.0.0"
+    "normalize-css": "^5.0.0",
+    "moment": "momentjs#^2.15.2"
   }
 }
