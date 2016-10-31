@@ -13,6 +13,7 @@
     <link href="styles/main.css" rel="stylesheet">
     <!-- endbuild -->
   </head>
+
   <body>
     <div id="map" class="map-container"></div>
     <div class="date-selector">
@@ -22,6 +23,7 @@
       </form>
     </div>
   </body>
+
   <!-- build:js js/vendor.js -->
   <script src="vendor/leaflet/dist/leaflet-src.js"></script>
   <script src="vendor/heatmap.js-amd/build/heatmap.js"></script>
@@ -31,8 +33,10 @@
   <script src="vendor/moment/locale/ru.js"></script>
   <script src="vendor/pikaday/pikaday.js"></script>
   <!-- endbuild -->
+
   <!-- build:js js/app.js -->
-  <script src="scripts/map.js"></script>
-  <script src="scripts/calendar.js"></script>
+  <script defer src="scripts/resources/earthquake.js"></script>
+  <script defer src="scripts/map.js"></script>
+  <script defer src="scripts/calendar.js"></script>
   <!-- endbuild -->
 </html>

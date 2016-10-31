@@ -1,7 +1,7 @@
 /* globals Pikaday, document */
 'use strict';
 
-;(function(Pikaday, doc, log) {
+;(function(Pikaday, MapController, doc, log) {
 
   /**
    * A dumb object cloning method
@@ -51,4 +51,4 @@
 
   return dateControls;
 
-})(Pikaday, document, console);
+})(Pikaday, MapController, document, console);

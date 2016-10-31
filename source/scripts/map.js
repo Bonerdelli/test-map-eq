@@ -1,7 +1,7 @@
-/* globals L, HeatmapOverlay, promise */
+/* globals L, HeatmapOverlay, EarthquakeResource */
 'use strict';
 
-;(function(L, HeatmapOverlay, promise, log) {
+var MapController = (function(L, HeatmapOverlay, EarthquakeResource, log) {
 
   var options = {
     mapElementId: 'map',
@@ -37,6 +37,9 @@
     }
   };
 
+  // Factory object
+  var MapController = {};
+
   // Initialize leaflet map
   var map = L.map(options.mapElementId);
 
@@ -69,7 +72,7 @@
   /**
    * Sets a new data from GeoJSON
    */
-  var setData = function(geoJson) {
+  MapController.setData = function(geoJson) {
     var heatMapData = [];
     // Add data to a point layer
     pointsLayer.addData(geoJson);
@@ -98,37 +101,28 @@
   /**
    * Cleans all data
    */
-  var cleanData = function() {
+  MapController.cleanData = function() {
     pointsLayer.clearLayers();
     heatmapLayer.setData([]);
   };
 
-  // Requesting GeoJSON data
-  var apiUrl = 'http://earthquake.usgs.gov/fdsnws/event/1/query';
-  promise.get(apiUrl, {
-    format:    'geojson',
-    eventtype: 'earthquake',
-    starttime: '2014-01-01',
-    endtime:   '2014-01-02',
-  }).then(function(error, response, xhr) {
-    if (error) {
-      log.error('Error requesting features data', xhr.status);
-    } else {
-      var featuresData;
-      try {
-        featuresData = JSON.parse(response);
-      } catch (e) {
-        log.error('Error parsing features data', e);
-      }
-      if (featuresData.features.length) {
-        // Set a new data
-        setData(featuresData);
+  /**
+   * Quering earthquakes data
+   */
+  EarthquakeResource.query().then(
+    function(data) {
+      if (data.features.length) {
+        log.info('Retrieved features count:', data.features.length);
+        // Set a new features data
+        MapController.setData(data);
       } else {
         // Clean if no data was retrieved
-        cleanData();
+        MapController.cleanData();
       }
-
     }
-  });
+  );
 
-})(L, HeatmapOverlay, promise, console);
+  // Returns factory object
+  return MapController;
+
+})(L, HeatmapOverlay, EarthquakeResource, console);
