@@ -4,7 +4,7 @@
 /**
  * Controller for date selection
  * @author Andrei Nekrasov <bonerdelli@gmail.com>
- * @package avnk-scanex-test-work-2
+ * @package avnk-testwork-earthquake-map
  * @year 2016
  */
 

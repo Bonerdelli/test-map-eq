@@ -25,7 +25,7 @@ html, body, .map-container {
   min-width: 8rem;
   max-width: 12rem;
 
-  text-align: left;
+  text-align: center;
   padding: .25rem .5rem;
   cursor: pointer;
 

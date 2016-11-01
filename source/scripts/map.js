@@ -4,7 +4,7 @@
 /**
  * Earthquake map controller
  * @author Andrei Nekrasov <bonerdelli@gmail.com>
- * @package avnk-scanex-test-work-2
+ * @package avnk-testwork-earthquake-map
  * @year 2016
  */
 
@@ -125,12 +125,14 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, moment, log
         lat: item.geometry.coordinates[1],
         lng: item.geometry.coordinates[0],
         // Scale Richter magnitude to a 0..1 range
-        mag: item.properties.mag / 10
+        mag: item.properties.mag
       });
     }
     // Add data to a head map
     heatmapLayer.setData({
-      data: heatMapData
+      data: heatMapData,
+      max: 10,
+      min: 0
     });
   };
 
