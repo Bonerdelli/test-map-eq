@@ -1,4 +1,4 @@
-/* globals L, HeatmapOverlay, EarthquakeResource */
+/* globals L, HeatmapOverlay, EarthquakeResource, moment */
 'use strict';
 
 /**
@@ -8,7 +8,7 @@
  * @year 2016
  */
 
-var MapController = (function(L, HeatmapOverlay, EarthquakeResource, log) {
+var MapController = (function(L, HeatmapOverlay, EarthquakeResource, moment, log) {
 
   /**
    * Leaflet map options
@@ -69,13 +69,39 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, log) {
   // Initialize heatmap layer
   var heatmapLayer = new HeatmapOverlay(options.heatMap).addTo(map);
 
+  var renderFeaturePopup = function(feature) {
+    var html = '<dl class="data-list">';
+    var props = feature.properties;
+    var fields = [{
+      title: 'Магнитуда',
+      value: '<strong>' + props.mag + '</strong>'
+    }, {
+      title: 'Код события',
+      value: '<a href="' + props.url + '" target="_blank">' +
+              props.code + '</a>'
+    }, {
+      title: 'Дата и время',
+      value: moment(props.time).format('LLL')
+    }, {
+      title: 'Место',
+      value: props.place
+    }];
+    for (var i = 0; i < fields.length; i++) {
+      html += '<dt>' + (fields[i].title || '&nbsp;') + '</dt>' +
+              '<dd>' + fields[i].value + '</dd>';
+    }
+    html += '<dl>';
+    return html;
+  };
+
   // Initialize vector layer with a points
   var pointsLayer = L.geoJSON(undefined, {
     pointToLayer: function(feature, latlng) {
       return L.circleMarker(latlng, options.pointMarkerStyle);
     },
     onEachFeature: function(feature, layer) {
-      layer.bindPopup(feature.properties.place);
+      var content = renderFeaturePopup(feature);
+      layer.bindPopup(content);
     }
   }).addTo(map);
 
@@ -134,4 +160,4 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, log) {
   // Returns factory object
   return MapController;
 
-})(L, HeatmapOverlay, EarthquakeResource, console);
+})(L, HeatmapOverlay, EarthquakeResource, moment, console);
