@@ -1,7 +1,14 @@
-/* globals promise */
+/* globals promise, moment */
 'use strict';
 
-var EarthquakeResource = (function(promise, log) {
+/**
+ * Resource for quering earthquake data from http://earthquake.usgs.gov
+ * @author Andrei Nekrasov <bonerdelli@gmail.com>
+ * @package avnk-scanex-test-work-2
+ * @year 2016
+ */
+
+var EarthquakeResource = (function(promise, moment, log) {
 
   /**
    * Resource options
@@ -11,8 +18,9 @@ var EarthquakeResource = (function(promise, log) {
   var defaultQueryOptions =  {
     format:    'geojson',
     eventtype: 'earthquake',
-    starttime: '2014-01-01',
-    endtime:   '2014-01-02',
+    // Request data for a last week by default
+    starttime:  moment().subtract(1, 'week').format('YYYY-MM-DD'),
+    endtime:    moment().format('YYYY-MM-DD')
   };
 
   /**
@@ -24,7 +32,7 @@ var EarthquakeResource = (function(promise, log) {
       if (src.hasOwnProperty(prop)) {
         if (typeof src[prop] === 'object') {
           target[prop] = extend(target[prop], src[prop]);
-        } else {
+        } else if (typeof src[prop] !== 'undefined') {
           target[prop] = src[prop];
         }
       }
@@ -32,11 +40,20 @@ var EarthquakeResource = (function(promise, log) {
     return target;
   };
 
+  var beforeQueryCallbacks = [];
   var afterQueryCallbacks = [];
+
   var reloadResource = function(options) {
-    options = options || {};
+    var queryOptions = {};
     var deffered = new promise.Promise();
-    var queryOptions = extend(options, defaultQueryOptions);
+    // Apply callbacks
+    beforeQueryCallbacks.forEach(function(callback) {
+      callback();
+    });
+    // Generate options for query
+    options = options || {};
+    extend(queryOptions, defaultQueryOptions);
+    extend(queryOptions, options);
     // Quering API with a given options
     promise.get(apiUrl, queryOptions).then(
       function(error, response, xhr) {
@@ -53,7 +70,9 @@ var EarthquakeResource = (function(promise, log) {
             log.error('Error parsing features data', e);
           }
         }
+        // Resolve promise
         deffered.done(data);
+        // Apply callbacks
         afterQueryCallbacks.forEach(function(callback) {
           callback(data);
         });
@@ -61,6 +80,11 @@ var EarthquakeResource = (function(promise, log) {
     );
     // Returns deffered promise
     return deffered;
+  };
+
+  // Register callback that triggered before query starts
+  var doBeforeQuery = function(callback) {
+    beforeQueryCallbacks.push(callback);
   };
 
   // Register callback that triggered after query completes
@@ -71,7 +95,8 @@ var EarthquakeResource = (function(promise, log) {
   // Returns factory object
   return {
     query: reloadResource,
+    doBeforeQuery: doBeforeQuery,
     doAfterQuery: doAfterQuery
   };
 
-})(promise, console);
+})(promise, moment, console);

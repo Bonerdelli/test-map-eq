@@ -1,7 +1,14 @@
-/* globals Pikaday, MapController, EarthquakeResource, document */
+/* globals Pikaday, MapController, EarthquakeResource, moment, document */
 'use strict';
 
-var CalendarController = (function(Pikaday, MapController, EarthquakeResource, doc, log) {
+/**
+ * Controller for date selection
+ * @author Andrei Nekrasov <bonerdelli@gmail.com>
+ * @package avnk-scanex-test-work-2
+ * @year 2016
+ */
+
+var CalendarController = (function(Pikaday, MapController, EarthquakeResource, moment, doc, log) {
 
   /**
    * A dumb object cloning method
@@ -19,12 +26,14 @@ var CalendarController = (function(Pikaday, MapController, EarthquakeResource, d
     dateFields: [{
       name: 'dateFrom',
       fieldName: 'datefrom',
+      defaultValue: moment().subtract(1, 'week').format('LL')
     }, {
       name: 'dateTo',
       fieldName: 'dateto',
+      defaultValue: moment().format('LL')
     }],
     pikaday: {
-      format: 'll', // NOTE: moment.js date format
+      format: 'LL', // NOTE: moment.js date format
       firstDay: 1,
       i18n: {
         previousMonth: 'Пред. месяц',
@@ -38,29 +47,52 @@ var CalendarController = (function(Pikaday, MapController, EarthquakeResource, d
     }
   };
 
-  var dateControls = {};
   var dateForm = doc.getElementById(options.formElementId);
+
+  var controls = {};
+  var dateSelected = {};
+  var elements = {};
 
   // Iterate on date fields and initialize them
   options.dateFields.forEach(function(field) {
     var dateInput = dateForm.elements[field.fieldName];
     var datePickerOpts = clone(options.pikaday);
     datePickerOpts.field = dateInput;
+    elements[field.name] = dateInput;
+    // Set a defalut value
+    dateInput.value = field.defaultValue;
+    // Set on date select callback
     datePickerOpts.onSelect = function() {
+      // Sets a new selected date
+      var date = this.getMoment().format('YYYY-MM-DD');
+      dateSelected[field.name] = date;
       // Reload earthquake data input changes
-      // log.log(this.getMoment().format('Do MMMM YYYY'));
       EarthquakeResource.query({
-        starttime: '2014-01-01',
-        endtime: '2014-01-02',
+        starttime: dateSelected.dateFrom,
+        endtime: dateSelected.dateTo
       });
     };
     var datePicker = new Pikaday(datePickerOpts);
-    dateControls[field.name] = datePicker;
+    controls[field.name] = datePicker;
+  });
+
+
+  // Disable inputs before query
+  EarthquakeResource.doBeforeQuery(function() {
+    elements.dateFrom.disabled = true;
+    elements.dateTo.disabled = true;
+  });
+
+  // Enable inputs after query
+  EarthquakeResource.doAfterQuery(function() {
+    elements.dateFrom.disabled = false;
+    elements.dateTo.disabled = false;
   });
 
   // Returns a factory object
   return {
-    controls: dateControls
+    controls: controls,
+    selected: dateSelected
   };
 
-})(Pikaday, MapController, EarthquakeResource, document, console);
+})(Pikaday, MapController, EarthquakeResource, moment, document, console);

@@ -1,6 +1,13 @@
 /* globals L, HeatmapOverlay, EarthquakeResource */
 'use strict';
 
+/**
+ * Earthquake map controller
+ * @author Andrei Nekrasov <bonerdelli@gmail.com>
+ * @package avnk-scanex-test-work-2
+ * @year 2016
+ */
+
 var MapController = (function(L, HeatmapOverlay, EarthquakeResource, log) {
 
   /**
@@ -32,10 +39,10 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, log) {
       useLocalExtrema: false,
       valueField: 'mag',
       gradient: {
-        0.15: '#05f',
-        0.35: '#0f3',
-        0.55: '#ff0',
-        0.75: '#f00'
+        0.25: '#05f',
+        0.40: '#0f3',
+        0.75: '#ff0',
+        0.98: '#f00'
       }
     }
   };
