@@ -98,7 +98,7 @@ var path = {
 
 var opts = {
   env: 'develop',
-  version: '0.0.1',
+  version: '0.5.0',
   autoprefixer: [
     'last 1 version',
     '> 1%'
