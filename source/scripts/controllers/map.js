@@ -2,8 +2,9 @@
 'use strict';
 
 /**
- * Earthquake map controller
- * @author Andrei Nekrasov <bonerdelli@gmail.com>
+ * Map controller for displaying earthquakes data from http://earthquake.usgs.gov
+ * Uses Leaflet map library and MapBox as tile source
+ * @author Andrei Nekrasov <avnk@yandex.ru>
  * @package avnk-testwork-earthquake-map
  * @year 2016
  */
@@ -15,15 +16,18 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, moment, log
    */
   var options = {
     mapElementId: 'map',
+    // MapBox source options
     mapBox: {
       accessToken: 'pk.eyJ1IjoiYm9uZXJkZWxsaSIsImEiOiJjaWlsY2d5MzYwMDVjdm5tMDhta2N6cXBoIn0.rC98OHIqnN3oQiSnoSKp2g',
       styleBaseUrl: 'https://api.mapbox.com/styles/v1/mapbox/dark-v9'
     },
+    // Default map position
     defaultPosition: {
       lon: 37.8,
       lat: -96,
       zoom: 4
     },
+    // Styles for vector point markers
     pointMarkerStyle: {
       radius: 2,
       fillColor: '#fff',
@@ -32,6 +36,7 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, moment, log
       opacity: 0.2,
       fillOpacity: 1
     },
+    // Options for HeatmapOverlay library
     heatMap: {
       radius: 2,
       maxOpacity: 0.8,

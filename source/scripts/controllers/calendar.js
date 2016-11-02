@@ -2,8 +2,8 @@
 'use strict';
 
 /**
- * Controller for date selection
- * @author Andrei Nekrasov <bonerdelli@gmail.com>
+ * Controller for date range selection
+ * @author Andrei Nekrasov <avnk@yandex.ru>
  * @package avnk-testwork-earthquake-map
  * @year 2016
  */
@@ -42,6 +42,7 @@ var CalendarController = (function(Pikaday, MapController, EarthquakeResource, m
    */
   var options = {
     formElementId: 'dateSelectorForm',
+    // Field definitions
     dateFields: [{
       name: 'dateFrom',
       fieldName: 'datefrom',
@@ -51,6 +52,7 @@ var CalendarController = (function(Pikaday, MapController, EarthquakeResource, m
       fieldName: 'dateto',
       defaultValue: moment().format('LL')
     }],
+    // Options for Pikaday library
     pikaday: {
       format:   'LL', // NOTE: moment.js date format
       maxDate:  moment().toDate(),
