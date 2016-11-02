@@ -37,7 +37,6 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
     return target;
   };
 
-
   /**
    * Calendar controller options
    */
@@ -85,6 +84,8 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
    * Initializes date selector
    */
   DateSelectorController.prototype.initialize = function() {
+
+    var self = this;
     var dateForm = doc.getElementById(options.formElementId);
     var fields = this.options.dateFields || [];
 
@@ -97,12 +98,12 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
       // Set on date select callback
       var onDateSelect = function() {
         // Sets a new selected date
-        var date = this.getMoment().format('YYYY-MM-DD');
-        this.dateSelected[field.name] = date;
+        var date = self.getMoment().format('YYYY-MM-DD');
+        self.dateSelected[field.name] = date;
         // Reload earthquake data input changes
         earthquake.query({
-          starttime: this.dateSelected.dateFrom,
-          endtime: this.dateSelected.dateTo
+          starttime: self.dateSelected.dateFrom,
+          endtime: self.dateSelected.dateTo
         });
       };
 
@@ -116,20 +117,20 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
 
       // Initialize date picker
       var datePicker = new Pikaday(datePickerOpts);
-      this.controls[field.name] = datePicker;
-      this.elements[field.name] = dateInput;
+      self.controls[field.name] = datePicker;
+      self.elements[field.name] = dateInput;
     });
 
     // Disable inputs before query
     earthquake.doBeforeQuery(function() {
-      this.elements.dateFrom.disabled = true;
-      this.elements.dateTo.disabled = true;
+      self.elements.dateFrom.disabled = true;
+      self.elements.dateTo.disabled = true;
     });
 
     // Enable inputs after query
     earthquake.doAfterQuery(function() {
-      this.elements.dateFrom.disabled = false;
-      this.elements.dateTo.disabled = false;
+      self.elements.dateFrom.disabled = false;
+      self.elements.dateTo.disabled = false;
     });
 
   };

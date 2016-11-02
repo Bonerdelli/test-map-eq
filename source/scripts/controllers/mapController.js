@@ -70,6 +70,7 @@ function(L, HeatmapOverlay, earthquake, moment, log) {
 
   MapController.prototype.initialize = function() {
 
+    var self = this;
     // Initialize leaflet map
     var map = L.map(options.mapElementId);
     this.map = map;
@@ -96,21 +97,20 @@ function(L, HeatmapOverlay, earthquake, moment, log) {
         return L.circleMarker(latlng, options.pointMarkerStyle);
       },
       onEachFeature: function(feature, layer) {
-        var content = this.renderFeaturePopup(feature);
+        var content = self.renderFeaturePopup(feature);
         layer.bindPopup(content);
       }
     }).addTo(map);
 
     // Registering callback for earthquake resource
     earthquake.doAfterQuery(function(data) {
-      var map = app.require('map');
       if (data.features.length) {
         log.info('Retrieved features count:', data.features.length);
         // Set a new features data
-        map.setData(data);
+        self.setData(data);
       } else {
         // Clean if no data was retrieved
-        map.cleanData();
+        self.cleanData();
       }
     });
 
