@@ -84,11 +84,11 @@ html, body, .map-container {
 }
 
 .date-selector-message.error {
-  color #ff9f9f;
+  color: #ff9f9f;
 }
 
 .date-selector-message.warning {
-  color #e8d36f;
+  color: #e8d36f;
 }
 
 /* Data list (for feature popup) */
