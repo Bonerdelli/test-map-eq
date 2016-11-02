@@ -8,15 +8,15 @@
  * @year 2016
  */
 
-app.define('earthquake', ['promise', 'moment', 'console'],
-function(promise, moment, log) {
+app.define('earthquake', ['promise', 'moment', 'message', 'console'],
+function(promise, moment, message, log) {
 
   /**
    * Resource options
    * NOTE: this example doesn't need for global configuration
    */
   var options = {
-    apiUrl: 'http://earthquake.usgs.gov/fdsnws/event/1/query',
+    apiUrl: 'http://e-arthquake.usgs.gov/fdsnws/event/1/query',
     defaultQueryOptions: {
       format:    'geojson',
       eventtype: 'earthquake',
@@ -60,6 +60,7 @@ function(promise, moment, log) {
         if (error) {
           // Reject deffered promise if no data was retrieved
           log.error('Error requesting features data', xhr.status);
+          message.set('ошибка загрузки данных', 'error');
         } else {
           try {
             // Trying parse JSON response
@@ -67,6 +68,7 @@ function(promise, moment, log) {
           } catch (e) {
             // Reject deffered promise if parsing failed
             log.error('Error parsing features data', e);
+            message.set('ошибка обработки данных', 'error');
           }
         }
         // Resolve promise

@@ -40,7 +40,7 @@ function(L, HeatmapOverlay, earthquake, moment, log) {
     // Options for HeatmapOverlay library
     heatMap: {
       radius: 2,
-      maxOpacity: 0.8,
+      maxOpacity: 0.5,
       scaleRadius: true,
       useLocalExtrema: false,
       valueField: 'mag',
@@ -48,7 +48,8 @@ function(L, HeatmapOverlay, earthquake, moment, log) {
         0.25: '#05f',
         0.40: '#0f3',
         0.75: '#ff0',
-        0.98: '#f00'
+        0.98: '#f00',
+        // 0.995: '#f0f'
       }
     }
   };

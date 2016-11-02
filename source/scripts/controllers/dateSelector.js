@@ -8,8 +8,8 @@
  * @year 2016
  */
 
-app.define('dateSelector', ['Pikaday', 'earthquake', 'moment', 'document', 'console'],
-function(Pikaday, earthquake, moment, doc/*, log*/) {
+app.define('dateSelector', ['Pikaday', 'earthquake', 'message', 'moment', 'document', 'console'],
+function(Pikaday, earthquake, message, moment, doc/*, log*/) {
 
   /**
    * Calendar controller options
@@ -17,6 +17,7 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
    */
   var options = {
     formElementId: 'dateSelectorForm',
+
     // Field definitions
     dateFields: [{
       name: 'dateFrom',
@@ -27,6 +28,7 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
       fieldName: 'dateto',
       defaultValue: moment().format('LL')
     }],
+
     // Options for Pikaday library
     pikaday: {
       format: 'LL',
