@@ -1,4 +1,4 @@
-/* globals define */
+/* globals app */
 'use strict';
 
 /**
@@ -8,7 +8,7 @@
  * @year 2016
  */
 
-define('earthquake', ['promise', 'moment', 'console'],
+app.define('earthquake', ['promise', 'moment', 'console'],
 function(promise, moment, log) {
 
   /**

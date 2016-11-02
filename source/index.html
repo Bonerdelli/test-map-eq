@@ -28,10 +28,6 @@
     </div>
   </body>
 
-  <!-- build:js js/loader.js -->
-  <script src="vendor/almond/almond.js"></script>
-  <!-- endbuild -->
-
   <!-- build:js js/vendor.js -->
   <script src="vendor/leaflet/dist/leaflet-src.js"></script>
   <script src="vendor/heatmap.js-amd/build/heatmap.js"></script>
@@ -43,8 +39,9 @@
   <!-- endbuild -->
 
   <!-- build:js js/app.js -->
-  <script defer src="scripts/map.js"></script>
+  <script defer src="scripts/app.js"></script>
   <script defer src="scripts/resources/earthquake.js"></script>
+  <script defer src="scripts/controllers/mapController.js"></script>
   <script defer src="scripts/controllers/dateSelector.js"></script>
   <script defer src="scripts/controllers/message.js"></script>
   <!-- endbuild -->

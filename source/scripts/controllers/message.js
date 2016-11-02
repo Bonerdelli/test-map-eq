@@ -1,4 +1,4 @@
-/* globals define */
+/* globals app */
 'use strict';
 
 /**
@@ -8,7 +8,7 @@
  * @year 2016
  */
 
-define('message', ['moment', 'document', 'console'],
+app.define('message', ['moment', 'document', 'console'],
 function(/*moment, doc, log*/) {
 
   // Controller options

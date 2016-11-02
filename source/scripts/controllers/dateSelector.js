@@ -1,4 +1,4 @@
-/* globals define */
+/* globals app */
 'use strict';
 
 /**
@@ -8,7 +8,7 @@
  * @year 2016
  */
 
-define('dateSelector', ['Pikaday', 'MapController', 'earthquake', 'moment', 'document', 'console'],
+app.define('dateSelector', ['Pikaday', 'MapController', 'earthquake', 'moment', 'document', 'console'],
 function(Pikaday, MapController, earthquake, moment, doc/*, log*/) {
 
   /**
