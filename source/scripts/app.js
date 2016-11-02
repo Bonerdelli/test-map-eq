@@ -12,7 +12,9 @@ var app = (function(global, log) {
 
   var App = function() {
     this.modules = {};
+    this.onReadyCallbacks = {};
   };
+
 
   App.prototype.define = function(moduleName, deps, module) {
     var moduleArgs = [];
@@ -21,14 +23,18 @@ var app = (function(global, log) {
       moduleArgs.push(dependency);
     }
     this.modules[moduleName] = module.apply(this, moduleArgs);
+    if (typeof this.onReadyCallbacks[moduleName] !== 'undefined') {
+      var callback = this.onReadyCallbacks[moduleName];
+      callback.call(this.modules[moduleName]);
+    }
   };
 
   App.prototype.require = function(moduleName) {
     var module;
-    if (this.modules[moduleName] !== undefined) {
+    if (typeof this.modules[moduleName] !== 'undefined') {
       // Check for registered module
       module = this.modules[moduleName];
-    } else if (global[moduleName] !== undefined) {
+    } else if (typeof global[moduleName] !== 'undefined') {
       // Or check global instead
       module = global[moduleName];
     } else {
@@ -38,9 +44,22 @@ var app = (function(global, log) {
     return module;
   };
 
+  /**
+   * Register callback on module ready
+   */
+  App.prototype.onReady = function(moduleName, callback) {
+    this.onReadyCallbacks[moduleName] = callback;
+  };
+
   return new App();
 
 })(window, console);
 
 // Initializes an application
-app.require('map').initialize();
+app.onReady('map', function() {
+  this.initialize();
+});
+
+app.onReady('dateSelector', function() {
+  this.initialize();
+});
