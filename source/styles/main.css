@@ -1,3 +1,11 @@
+/**
+ * Styles for earthquake map
+ * TODO: make with preprocessor
+ * @author Andrei Nekrasov <bonerdelli@gmail.com>
+ * @package avnk-testwork-earthquake-map
+ * @year 2016
+ */
+
 /* Base layout */
 
 html, body, .map-container {

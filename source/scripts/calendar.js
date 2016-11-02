@@ -19,6 +19,25 @@ var CalendarController = (function(Pikaday, MapController, EarthquakeResource, m
   };
 
   /**
+   * A simple object extending method
+   * TODO: move to app.js
+   */
+  var extend = function(target, src) {
+    target = target || {};
+    for (var prop in src) {
+      if (src.hasOwnProperty(prop)) {
+        if (typeof src[prop] === 'object') {
+          target[prop] = extend(target[prop], src[prop]);
+        } else if (typeof src[prop] !== 'undefined') {
+          target[prop] = src[prop];
+        }
+      }
+    }
+    return target;
+  };
+
+
+  /**
    * Calendar controller options
    */
   var options = {
@@ -33,7 +52,8 @@ var CalendarController = (function(Pikaday, MapController, EarthquakeResource, m
       defaultValue: moment().format('LL')
     }],
     pikaday: {
-      format: 'LL', // NOTE: moment.js date format
+      format:   'LL', // NOTE: moment.js date format
+      maxDate:  moment().toDate(),
       firstDay: 1,
       i18n: {
         previousMonth: 'Пред. месяц',
@@ -55,14 +75,12 @@ var CalendarController = (function(Pikaday, MapController, EarthquakeResource, m
 
   // Iterate on date fields and initialize them
   options.dateFields.forEach(function(field) {
+
+    var datePickerOpts = extend({}, options.pikaday);
     var dateInput = dateForm.elements[field.fieldName];
-    var datePickerOpts = clone(options.pikaday);
-    datePickerOpts.field = dateInput;
-    elements[field.name] = dateInput;
-    // Set a defalut value
-    dateInput.value = field.defaultValue;
+
     // Set on date select callback
-    datePickerOpts.onSelect = function() {
+    var onDateSelect = function() {
       // Sets a new selected date
       var date = this.getMoment().format('YYYY-MM-DD');
       dateSelected[field.name] = date;
@@ -72,8 +90,19 @@ var CalendarController = (function(Pikaday, MapController, EarthquakeResource, m
         endtime: dateSelected.dateTo
       });
     };
+
+    // Construct options
+    datePickerOpts.onSelect = onDateSelect;
+    datePickerOpts.field = dateInput;
+
+    // Set a defalut value
+    // datePickerOpts.defaultDate = field.defaultValue;
+    dateInput.value = field.defaultValue;
+
+    // Initialize date picker
     var datePicker = new Pikaday(datePickerOpts);
     controls[field.name] = datePicker;
+    elements[field.name] = dateInput;
   });
 
 
