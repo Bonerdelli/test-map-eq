@@ -15,7 +15,9 @@ var app = (function(global, log) {
     this.onReadyCallbacks = {};
   };
 
-
+  /**
+   * Define a new module
+   */
   App.prototype.define = function(moduleName, deps, module) {
     var moduleArgs = [];
     for (var i = 0; i < deps.length; i++) {
@@ -29,6 +31,9 @@ var app = (function(global, log) {
     }
   };
 
+  /**
+   * Require an existing module
+   */
   App.prototype.require = function(moduleName) {
     var module;
     if (typeof this.modules[moduleName] !== 'undefined') {
@@ -45,6 +50,31 @@ var app = (function(global, log) {
   };
 
   /**
+   * A simple object extending method
+   */
+  App.prototype.extend = function extend(target, src) {
+    target = target || {};
+    for (var prop in src) {
+      if (src.hasOwnProperty(prop)) {
+        if (typeof src[prop] === 'object') {
+          target[prop] = extend(target[prop], src[prop]);
+        } else if (typeof src[prop] !== 'undefined') {
+          target[prop] = src[prop];
+        }
+      }
+    }
+    return target;
+  };
+
+  /**
+   * A dumb object cloning method
+   * NOTE: use it only for hashes
+   */
+  App.prototype.clone = function(obj) {
+    return JSON.parse(JSON.stringify(obj));
+  };
+
+  /**
    * Register callback on module ready
    */
   App.prototype.onReady = function(moduleName, callback) {
@@ -55,7 +85,10 @@ var app = (function(global, log) {
 
 })(window, console);
 
-// Initializes an application
+/**
+ * Initializes application
+ */
+
 app.onReady('map', function() {
   this.initialize();
 });

@@ -36,23 +36,6 @@ function(promise, moment, log) {
   };
 
   /**
-   * A simple object extending method
-   */
-  var extend = function(target, src) {
-    target = target || {};
-    for (var prop in src) {
-      if (src.hasOwnProperty(prop)) {
-        if (typeof src[prop] === 'object') {
-          target[prop] = extend(target[prop], src[prop]);
-        } else if (typeof src[prop] !== 'undefined') {
-          target[prop] = src[prop];
-        }
-      }
-    }
-    return target;
-  };
-
-  /**
    * Query data with given options
    */
   EarthquakeResource.prototype.query = function(options) {
@@ -67,8 +50,8 @@ function(promise, moment, log) {
     }
     // Generate options for query
     options = options || {};
-    extend(queryOptions, this.options.defaultQueryOptions);
-    extend(queryOptions, options);
+    app.extend(queryOptions, this.options.defaultQueryOptions);
+    app.extend(queryOptions, options);
     // Quering API with a given options
     var self = this;
     promise.get(url, queryOptions).then(

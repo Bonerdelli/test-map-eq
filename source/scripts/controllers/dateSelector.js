@@ -12,32 +12,6 @@ app.define('dateSelector', ['Pikaday', 'earthquake', 'moment', 'document', 'cons
 function(Pikaday, earthquake, moment, doc/*, log*/) {
 
   /**
-   * A dumb object cloning method
-   * NOTE: use it only for hashes
-   */
-  var clone = function(obj) {
-    return JSON.parse(JSON.stringify(obj));
-  };
-
-  /**
-   * A simple object extending method
-   * TODO: move to app.js
-   */
-  var extend = function(target, src) {
-    target = target || {};
-    for (var prop in src) {
-      if (src.hasOwnProperty(prop)) {
-        if (typeof src[prop] === 'object') {
-          target[prop] = extend(target[prop], src[prop]);
-        } else if (typeof src[prop] !== 'undefined') {
-          target[prop] = src[prop];
-        }
-      }
-    }
-    return target;
-  };
-
-  /**
    * Calendar controller options
    */
   var options = {
@@ -92,7 +66,7 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
     // Iterate on date fields and initialize them
     fields.forEach(function(field) {
 
-      var datePickerOpts = extend({}, options.pikaday);
+      var datePickerOpts = app.extend({}, options.pikaday);
       var dateInput = dateForm.elements[field.fieldName];
 
       // Set on date select callback
