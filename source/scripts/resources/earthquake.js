@@ -1,4 +1,4 @@
-/* globals promise, moment */
+/* globals define */
 'use strict';
 
 /**
@@ -8,19 +8,31 @@
  * @year 2016
  */
 
-var EarthquakeResource = (function(promise, moment, log) {
+define('earthquake', ['promise', 'moment', 'console'],
+function(promise, moment, log) {
 
   /**
    * Resource options
    * NOTE: this example doesn't needed global storage for configuration
    */
-  var apiUrl = 'http://earthquake.usgs.gov/fdsnws/event/1/query';
-  var defaultQueryOptions =  {
-    format:    'geojson',
-    eventtype: 'earthquake',
-    // Request data for a last week by default
-    starttime:  moment().subtract(1, 'week').format('YYYY-MM-DD'),
-    endtime:    moment().format('YYYY-MM-DD')
+  var options = {
+    apiUrl: 'http://earthquake.usgs.gov/fdsnws/event/1/query',
+    defaultQueryOptions: {
+      format:    'geojson',
+      eventtype: 'earthquake',
+      // Request data for a last week by default
+      starttime:  moment().subtract(1, 'week').format('YYYY-MM-DD'),
+      endtime:    moment().format('YYYY-MM-DD')
+    }
+  };
+
+  /**
+   * Messages controller constructor
+   */
+  var EarthquakeResource = function(options) {
+    this.options = options;
+    this.beforeQueryCallbacks = [];
+    this.afterQueryCallbacks = [];
   };
 
   /**
@@ -40,22 +52,25 @@ var EarthquakeResource = (function(promise, moment, log) {
     return target;
   };
 
-  var beforeQueryCallbacks = [];
-  var afterQueryCallbacks = [];
-
-  var reloadResource = function(options) {
+  /**
+   * Query data with given options
+   */
+  EarthquakeResource.prototype.query = function(options) {
     var queryOptions = {};
+    var url = this.options.apiUrl;
     var deffered = new promise.Promise();
     // Apply callbacks
-    beforeQueryCallbacks.forEach(function(callback) {
-      callback();
-    });
+    if (this.beforeQueryCallbacks.length) {
+      this.beforeQueryCallbacks.forEach(function(callback) {
+        callback();
+      });
+    }
     // Generate options for query
     options = options || {};
-    extend(queryOptions, defaultQueryOptions);
+    extend(queryOptions, this.options.defaultQueryOptions);
     extend(queryOptions, options);
     // Quering API with a given options
-    promise.get(apiUrl, queryOptions).then(
+    promise.get(url, queryOptions).then(
       function(error, response, xhr) {
         var data = [];
         if (error) {
@@ -73,30 +88,32 @@ var EarthquakeResource = (function(promise, moment, log) {
         // Resolve promise
         deffered.done(data);
         // Apply callbacks
-        afterQueryCallbacks.forEach(function(callback) {
-          callback(data);
-        });
+        if (this.afterQueryCallbacks.length) {
+          this.afterQueryCallbacks.forEach(function(callback) {
+            callback(data);
+          });
+        }
       }
     );
     // Returns deffered promise
     return deffered;
   };
 
-  // Register callback that triggered before query starts
-  var doBeforeQuery = function(callback) {
-    beforeQueryCallbacks.push(callback);
+  /**
+   * Register callback that triggered before query starts
+   */
+  EarthquakeResource.prototype.doBeforeQuery = function(callback) {
+    this.beforeQueryCallbacks.push(callback);
   };
 
-  // Register callback that triggered after query completes
-  var doAfterQuery = function(callback) {
-    afterQueryCallbacks.push(callback);
+  /**
+   * Register callback that triggered after query completes
+   */
+  EarthquakeResource.prototype.doAfterQuery = function(callback) {
+    this.afterQueryCallbacks.push(callback);
   };
 
-  // Returns factory object
-  return {
-    query: reloadResource,
-    doBeforeQuery: doBeforeQuery,
-    doAfterQuery: doAfterQuery
-  };
+  // Returns an EarthquakeResource instance
+  return new EarthquakeResource(options);
 
-})(promise, moment, console);
+});

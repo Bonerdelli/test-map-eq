@@ -9,7 +9,7 @@
     <link href="vendor/pikaday/css/pikaday.css" rel="stylesheet">
     <link href="vendor/normalize-css/normalize.css" rel="stylesheet">
     <!-- endbuild -->
-    
+
     <!-- build:css css/app.css -->
     <link href="styles/main.css" rel="stylesheet">
     <!-- endbuild -->
@@ -28,6 +28,10 @@
     </div>
   </body>
 
+  <!-- build:js js/loader.js -->
+  <script src="vendor/almond/almond.js"></script>
+  <!-- endbuild -->
+
   <!-- build:js js/vendor.js -->
   <script src="vendor/leaflet/dist/leaflet-src.js"></script>
   <script src="vendor/heatmap.js-amd/build/heatmap.js"></script>
@@ -39,9 +43,9 @@
   <!-- endbuild -->
 
   <!-- build:js js/app.js -->
-  <!-- NOTE: this example doesn't needed for RequireJS or other trash -->
+  <script defer src="scripts/map.js"></script>
   <script defer src="scripts/resources/earthquake.js"></script>
-  <script defer src="scripts/controllers/map.js"></script>
-  <script defer src="scripts/controllers/calendar.js"></script>
+  <script defer src="scripts/controllers/dateSelector.js"></script>
+  <script defer src="scripts/controllers/message.js"></script>
   <!-- endbuild -->
 </html>

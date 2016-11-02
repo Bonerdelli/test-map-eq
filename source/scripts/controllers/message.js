@@ -1,14 +1,29 @@
-/* globals moment, document */
+/* globals define */
 'use strict';
 
 /**
- * A simple message controller for data range selector
+ * A simple message controller
  * @author Andrei Nekrasov <avnk@yandex.ru>
  * @package avnk-testwork-earthquake-map
  * @year 2016
  */
 
-var MessageController = (function(moment, doc, log) {
+define('message', ['moment', 'document', 'console'],
+function(/*moment, doc, log*/) {
 
+  // Controller options
+  var options = {
+    elementId: 'map',
+  };
 
-})(moment, document, console);
+  /**
+   * Messages controller constructor
+   */
+  var MessageController = function(options) {
+    this.options = options;
+  };
+
+  // Returns a module
+  return new MessageController(options);
+
+});

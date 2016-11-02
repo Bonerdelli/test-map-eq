@@ -1,15 +1,16 @@
-/* globals L, HeatmapOverlay, EarthquakeResource, moment */
+/* globals define */
 'use strict';
 
 /**
- * Map controller for displaying earthquakes data from http://earthquake.usgs.gov
+ * Controller for displaying earthquakes on a map
  * Uses Leaflet map library and MapBox as tile source
  * @author Andrei Nekrasov <avnk@yandex.ru>
  * @package avnk-testwork-earthquake-map
  * @year 2016
  */
 
-var MapController = (function(L, HeatmapOverlay, EarthquakeResource, moment, log) {
+define('map', ['L', 'HeatmapOverlay', 'earthquake', 'moment', 'console'],
+function(L, HeatmapOverlay, earthquake, moment, log) {
 
   /**
    * Leaflet map options
@@ -52,29 +53,70 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, moment, log
     }
   };
 
-  // Factory object
-  var MapController = {};
+  /**
+   * Map controller constructor
+   * Initializes map with given options
+   */
+  var MapController = function(options) {
 
-  // Initialize leaflet map
-  var map = L.map(options.mapElementId);
+    // Initialize leaflet map
+    var map = L.map(options.mapElementId);
 
-  // Set coordinates & center of a map
-  map.setView([
-    options.defaultPosition.lon,
-    options.defaultPosition.lat
-  ], options.defaultPosition.zoom);
+    // Set coordinates & center of a map
+    map.setView([
+      options.defaultPosition.lon,
+      options.defaultPosition.lat
+    ], options.defaultPosition.zoom);
 
-  // Add MapBox layer (OSM-based)
-  L.tileLayer(options.mapBox.styleBaseUrl + '/tiles/256/{z}/{x}/{y}?access_token=' + options.mapBox.accessToken, {
-    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
-      '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
-      'Imagery &copy; <a href="http://mapbox.com">Mapbox</a>'
-  }).addTo(map);
+    // Add MapBox layer (OSM-based)
+    L.tileLayer(options.mapBox.styleBaseUrl + '/tiles/256/{z}/{x}/{y}?access_token=' + options.mapBox.accessToken, {
+      attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, ' +
+        '<a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, ' +
+        'Imagery &copy; <a href="http://mapbox.com">Mapbox</a>'
+    }).addTo(map);
 
-  // Initialize heatmap layer
-  var heatmapLayer = new HeatmapOverlay(options.heatMap).addTo(map);
+    // Initialize heatmap layer
+    var heatmapLayer = new HeatmapOverlay(options.heatMap).addTo(map);
 
-  var renderFeaturePopup = function(feature) {
+    // Initialize vector layer with a points
+    var pointsLayer = L.geoJSON(undefined, {
+      pointToLayer: function(feature, latlng) {
+        return L.circleMarker(latlng, options.pointMarkerStyle);
+      },
+      onEachFeature: function(feature, layer) {
+        var content = this.renderFeaturePopup(feature);
+        layer.bindPopup(content);
+      }
+    }).addTo(map);
+
+    // Registering callback for earthquake resource
+    earthquake.doAfterQuery(function(data) {
+      if (data.features.length) {
+        log.info('Retrieved features count:', data.features.length);
+        // Set a new features data
+        this.setData(data);
+      } else {
+        // Clean if no data was retrieved
+        this.cleanData();
+      }
+    });
+
+    // Quering data at startup
+    earthquake.query();
+
+    this.map = map;
+    this.options = options;
+    this.heatmapLayer = heatmapLayer;
+    this.pointsLayer = pointsLayer;
+
+    return true;
+
+  };
+
+  /**
+   * Renders feature popup, opened on mouse click
+   */
+  MapController.prototype.renderFeaturePopup = function(feature) {
     var html = '<dl class="data-list">';
     var props = feature.properties;
     var fields = [{
@@ -99,24 +141,13 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, moment, log
     return html;
   };
 
-  // Initialize vector layer with a points
-  var pointsLayer = L.geoJSON(undefined, {
-    pointToLayer: function(feature, latlng) {
-      return L.circleMarker(latlng, options.pointMarkerStyle);
-    },
-    onEachFeature: function(feature, layer) {
-      var content = renderFeaturePopup(feature);
-      layer.bindPopup(content);
-    }
-  }).addTo(map);
-
   /**
-   * Sets a new data from GeoJSON
+   * Sets a new GeoJSON data
    */
-  MapController.setData = function(geoJson) {
+  MapController.prototype.setData = function(geoJson) {
     var heatMapData = [];
     // Add data to a point layer
-    pointsLayer.addData(geoJson);
+    this.pointsLayer.addData(geoJson);
     // Prepare data for a heat map
     for (var i = 0; i < geoJson.features.length; i++) {
       var item = geoJson.features[i];
@@ -134,7 +165,7 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, moment, log
       });
     }
     // Add data to a head map
-    heatmapLayer.setData({
+    this.heatmapLayer.setData({
       data: heatMapData,
       max: 10,
       min: 0
@@ -144,27 +175,12 @@ var MapController = (function(L, HeatmapOverlay, EarthquakeResource, moment, log
   /**
    * Cleans all data
    */
-  MapController.cleanData = function() {
-    pointsLayer.clearLayers();
-    heatmapLayer.setData([]);
+  MapController.prototype.cleanData = function() {
+    this.pointsLayer.clearLayers();
+    this.heatmapLayer.setData([]);
   };
 
-  // Registering callback for earthquake resource
-  EarthquakeResource.doAfterQuery(function(data) {
-    if (data.features.length) {
-      log.info('Retrieved features count:', data.features.length);
-      // Set a new features data
-      MapController.setData(data);
-    } else {
-      // Clean if no data was retrieved
-      MapController.cleanData();
-    }
-  });
+  // Returns a module
+  return new MapController(options);
 
-  // Quering data at startup
-  EarthquakeResource.query();
-
-  // Returns factory object
-  return MapController;
-
-})(L, HeatmapOverlay, EarthquakeResource, moment, console);
+});
