@@ -13,7 +13,7 @@ function(promise, moment, log) {
 
   /**
    * Resource options
-   * NOTE: this example doesn't needed global storage for configuration
+   * NOTE: this example doesn't need for global configuration
    */
   var options = {
     apiUrl: 'http://earthquake.usgs.gov/fdsnws/event/1/query',

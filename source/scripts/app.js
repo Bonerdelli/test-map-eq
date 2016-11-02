@@ -52,14 +52,14 @@ var app = (function(global, log) {
   /**
    * A simple object extending method
    */
-  App.prototype.extend = function extend(target, src) {
+  App.prototype.extend = function extend(target, source) {
     target = target || {};
-    for (var prop in src) {
-      if (src.hasOwnProperty(prop)) {
-        if (typeof src[prop] === 'object') {
-          target[prop] = extend(target[prop], src[prop]);
-        } else if (typeof src[prop] !== 'undefined') {
-          target[prop] = src[prop];
+    for (var prop in source) {
+      if (source.hasOwnProperty(prop)) {
+        if (typeof source[prop] === 'object') {
+          target[prop] = extend(target[prop], source[prop]);
+        } else if (typeof source[prop] !== 'undefined') {
+          target[prop] = source[prop];
         }
       }
     }

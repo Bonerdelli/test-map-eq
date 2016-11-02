@@ -13,6 +13,7 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
 
   /**
    * Calendar controller options
+   * NOTE: this example doesn't need for global configuration
    */
   var options = {
     formElementId: 'dateSelectorForm',
@@ -28,8 +29,8 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
     }],
     // Options for Pikaday library
     pikaday: {
-      format:   'LL', // NOTE: moment.js date format
-      maxDate:  moment().toDate(),
+      format: 'LL',
+      maxDate: moment().toDate(),
       firstDay: 1,
       i18n: {
         previousMonth: 'Пред. месяц',
@@ -48,9 +49,9 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
    */
   var DateSelectorController = function(options) {
     this.options = options;
-    this.controls = {};
-    this.elements = {};
     this.dateSelected = {};
+    this.elements = {};
+    this.controls = {};
   };
 
 
@@ -69,7 +70,7 @@ function(Pikaday, earthquake, moment, doc/*, log*/) {
       var datePickerOpts = app.extend({}, options.pikaday);
       var dateInput = dateForm.elements[field.fieldName];
 
-      // Set on date select callback
+      // Set callback for date select
       var onDateSelect = function() {
         // Sets a new selected date
         var date = self.getMoment().format('YYYY-MM-DD');
