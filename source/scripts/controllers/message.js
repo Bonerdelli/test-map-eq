@@ -9,11 +9,13 @@
  */
 
 app.define('message', ['moment', 'document', 'console'],
-function(/*moment, doc, log*/) {
+function(moment, doc/*, log*/) {
 
   // Controller options
   var options = {
     elementId: 'map',
+    messageClass: null,
+    element: null
   };
 
   /**
@@ -21,6 +23,30 @@ function(/*moment, doc, log*/) {
    */
   var MessageController = function(options) {
     this.options = options;
+    var elementId = options.elementId;
+    options.element = doc.getElementById(elementId);
+  };
+
+  /**
+   * Set message
+   */
+  MessageController.prototype.set = function(messageText, messageClass) {
+    this.element.innerHTML = messageText;
+    if (messageClass) {
+      this.element.classList.add(messageClass);
+      this.messageClass = messageClass;
+    }
+  };
+
+  /**
+   * Clear message
+   */
+  MessageController.prototype.clear = function() {
+    this.element.innerHTML = '';
+    if (this.messageClass) {
+      this.element.classList.remove(this.messageClass);
+      this.messageClass = null;
+    }
   };
 
   // Returns a module
