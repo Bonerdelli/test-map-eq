@@ -41,3 +41,6 @@ var app = (function(global, log) {
   return new App();
 
 })(window, console);
+
+// Initializes an application
+app.require('map').initialize();

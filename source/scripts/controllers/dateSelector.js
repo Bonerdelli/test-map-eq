@@ -8,8 +8,8 @@
  * @year 2016
  */
 
-app.define('dateSelector', ['Pikaday', 'MapController', 'earthquake', 'moment', 'document', 'console'],
-function(Pikaday, MapController, earthquake, moment, doc/*, log*/) {
+app.define('dateSelector', ['Pikaday', 'earthquake', 'moment', 'document', 'console'],
+function(Pikaday, earthquake, moment, doc/*, log*/) {
 
   /**
    * A dumb object cloning method

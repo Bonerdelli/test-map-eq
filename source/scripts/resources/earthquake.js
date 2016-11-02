@@ -70,6 +70,7 @@ function(promise, moment, log) {
     extend(queryOptions, this.options.defaultQueryOptions);
     extend(queryOptions, options);
     // Quering API with a given options
+    var self = this;
     promise.get(url, queryOptions).then(
       function(error, response, xhr) {
         var data = [];
@@ -88,8 +89,8 @@ function(promise, moment, log) {
         // Resolve promise
         deffered.done(data);
         // Apply callbacks
-        if (this.afterQueryCallbacks.length) {
-          this.afterQueryCallbacks.forEach(function(callback) {
+        if (self.afterQueryCallbacks.length) {
+          self.afterQueryCallbacks.forEach(function(callback) {
             callback(data);
           });
         }

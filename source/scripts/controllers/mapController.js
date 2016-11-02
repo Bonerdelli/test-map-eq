@@ -58,9 +58,21 @@ function(L, HeatmapOverlay, earthquake, moment, log) {
    * Initializes map with given options
    */
   var MapController = function(options) {
+    this.options = options;
+    this.heatmapLayer = null;
+    this.pointsLayer = null;
+    this.map = null;
+  };
+
+  /**
+   * Initializes a map
+   */
+
+  MapController.prototype.initialize = function() {
 
     // Initialize leaflet map
     var map = L.map(options.mapElementId);
+    this.map = map;
 
     // Set coordinates & center of a map
     map.setView([
@@ -91,24 +103,22 @@ function(L, HeatmapOverlay, earthquake, moment, log) {
 
     // Registering callback for earthquake resource
     earthquake.doAfterQuery(function(data) {
+      var map = app.require('map');
       if (data.features.length) {
         log.info('Retrieved features count:', data.features.length);
         // Set a new features data
-        this.setData(data);
+        map.setData(data);
       } else {
         // Clean if no data was retrieved
-        this.cleanData();
+        map.cleanData();
       }
     });
 
     // Quering data at startup
     earthquake.query();
 
-    this.map = map;
-    this.options = options;
     this.heatmapLayer = heatmapLayer;
     this.pointsLayer = pointsLayer;
-
     return true;
 
   };
