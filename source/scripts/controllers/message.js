@@ -12,7 +12,7 @@ app.define('message', [], function() {
 
   // Controller options
   var options = {
-    elementId: 'map',
+    elementId: 'dateSelectorMessage',
     messageClass: null,
     element: null
   };
@@ -23,7 +23,7 @@ app.define('message', [], function() {
   var MessageController = function(options) {
     this.options = options;
     var elementId = options.elementId;
-    options.element = app.doc.getElementById(elementId);
+    this.element = app.doc.getElementById(elementId);
   };
 
   /**

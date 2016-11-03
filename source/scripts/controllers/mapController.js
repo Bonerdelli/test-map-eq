@@ -105,7 +105,7 @@ function(L, HeatmapOverlay, earthquake, moment) {
 
     // Registering callback for earthquake resource
     earthquake.doAfterQuery(function(data) {
-      if (data.features.length) {
+      if (data && data.features && data.features.length) {
         app.log.info('Retrieved features count:', data.features.length);
         // Set a new features data
         self.setData(data);
@@ -175,12 +175,16 @@ function(L, HeatmapOverlay, earthquake, moment) {
         mag: item.properties.mag
       });
     }
-    // Add data to a head map
-    this.heatmapLayer.setData({
-      data: heatMapData,
-      max: 10,
-      min: 0
-    });
+    if (heatMapData && heatMapData.length) {
+      // Add data to a head map
+      this.heatmapLayer.setData({
+        data: heatMapData,
+        max: 10,
+        min: 0
+      });
+    } else {
+      this.heatmapLayer.setData([]);
+    }
   };
 
   /**

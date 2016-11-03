@@ -16,7 +16,7 @@ function(promise, moment, message) {
    * NOTE: this example doesn't need for global configuration
    */
   var options = {
-    apiUrl: 'http://e-arthquake.usgs.gov/fdsnws/event/1/query',
+    apiUrl: 'http://earthquake.usgs.gov/fdsnws/event/1/query',
     defaultQueryOptions: {
       format:    'geojson',
       eventtype: 'earthquake',
@@ -60,7 +60,7 @@ function(promise, moment, message) {
         if (error) {
           // Reject deffered promise if no data was retrieved
           app.log.error('Error requesting features data', xhr.status);
-          message.set('ошибка загрузки данных', 'error');
+          message.set('произошла ошибка загрузки данных', 'error');
         } else {
           try {
             // Trying parse JSON response
@@ -68,7 +68,7 @@ function(promise, moment, message) {
           } catch (e) {
             // Reject deffered promise if parsing failed
             app.log.error('Error parsing features data', e);
-            message.set('ошибка обработки данных', 'error');
+            message.set('произошла ошибка обработки данных', 'error');
           }
         }
         // Resolve promise
