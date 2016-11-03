@@ -8,8 +8,8 @@
  * @year 2016
  */
 
-app.define('dateSelector', ['Pikaday', 'earthquake', 'message', 'moment', 'document', 'console'],
-function(Pikaday, earthquake, message, moment, doc/*, log*/) {
+app.define('dateSelector', ['Pikaday', 'earthquake', 'message', 'moment', 'document'],
+function(Pikaday, earthquake, message, moment, doc) {
 
   /**
    * Calendar controller options

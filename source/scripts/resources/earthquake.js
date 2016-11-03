@@ -8,8 +8,8 @@
  * @year 2016
  */
 
-app.define('earthquake', ['promise', 'moment', 'message', 'console'],
-function(promise, moment, message, log) {
+app.define('earthquake', ['promise', 'moment', 'message'],
+function(promise, moment, message) {
 
   /**
    * Resource options

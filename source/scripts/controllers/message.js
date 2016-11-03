@@ -8,8 +8,8 @@
  * @year 2016
  */
 
-app.define('message', ['moment', 'document', 'console'],
-function(moment, doc/*, log*/) {
+app.define('message', ['moment', 'document'],
+function(moment, doc) {
 
   // Controller options
   var options = {

@@ -9,8 +9,8 @@
  * @year 2016
  */
 
-app.define('map', ['L', 'HeatmapOverlay', 'earthquake', 'moment', 'console'],
-function(L, HeatmapOverlay, earthquake, moment, log) {
+app.define('map', ['L', 'HeatmapOverlay', 'earthquake', 'moment'],
+function(L, HeatmapOverlay, earthquake, moment) {
 
   /**
    * Leaflet map options
@@ -106,7 +106,7 @@ function(L, HeatmapOverlay, earthquake, moment, log) {
     // Registering callback for earthquake resource
     earthquake.doAfterQuery(function(data) {
       if (data.features.length) {
-        log.info('Retrieved features count:', data.features.length);
+        app.log.info('Retrieved features count:', data.features.length);
         // Set a new features data
         self.setData(data);
       } else {
