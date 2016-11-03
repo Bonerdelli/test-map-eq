@@ -9,8 +9,8 @@
  * @year 2016
  */
 
-app.define('map', ['L', 'HeatmapOverlay', 'earthquake', 'moment'],
-function(L, HeatmapOverlay, earthquake, moment) {
+app.define('map', ['L', 'HeatmapOverlay', 'earthquake', 'moment', 'message'],
+function(L, HeatmapOverlay, earthquake, moment, message) {
 
   /**
    * Leaflet map options
@@ -103,7 +103,12 @@ function(L, HeatmapOverlay, earthquake, moment) {
       }
     }).addTo(map);
 
-    // Registering callback for earthquake resource
+    // Sets a loading message
+    earthquake.doBeforeQuery(function() {
+      message.set('идёт загрузка данных', 'progress');
+    });
+
+    // Parse earthquake query response
     earthquake.doAfterQuery(function(data) {
       if (data && data.features && data.features.length) {
         app.log.info('Retrieved features count:', data.features.length);
@@ -114,9 +119,6 @@ function(L, HeatmapOverlay, earthquake, moment) {
         self.cleanData();
       }
     });
-
-    // Quering data at startup
-    earthquake.query();
 
     this.heatmapLayer = heatmapLayer;
     this.pointsLayer = pointsLayer;

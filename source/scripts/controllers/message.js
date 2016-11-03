@@ -14,7 +14,7 @@ app.define('message', [], function() {
   var options = {
     elementId: 'dateSelectorMessage',
     messageClass: null,
-    element: null
+    elements: {}
   };
 
   /**
@@ -23,16 +23,22 @@ app.define('message', [], function() {
   var MessageController = function(options) {
     this.options = options;
     var elementId = options.elementId;
-    this.element = app.doc.getElementById(elementId);
+    var element = app.doc.getElementById(elementId);
+    var textElement = element.querySelectorAll('.message')[0];
+    this.elements = {
+      container: element,
+      text: textElement
+    };
   };
 
   /**
    * Set message
    */
   MessageController.prototype.set = function(messageText, messageClass) {
-    this.element.innerHTML = messageText;
+    this._resetClass();
+    this.elements.text.innerHTML = messageText;
     if (messageClass) {
-      this.element.classList.add(messageClass);
+      this.elements.container.classList.add(messageClass);
       this.messageClass = messageClass;
     }
   };
@@ -41,9 +47,15 @@ app.define('message', [], function() {
    * Clear message
    */
   MessageController.prototype.clear = function() {
-    this.element.innerHTML = '';
+    this._resetClass();
+    this.elements.text.innerHTML = '';
+  };
+  /**
+   * Reset message class
+   */
+  MessageController.prototype._resetClass = function() {
     if (this.messageClass) {
-      this.element.classList.remove(this.messageClass);
+      this.elements.container.classList.remove(this.messageClass);
       this.messageClass = null;
     }
   };

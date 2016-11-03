@@ -22,11 +22,11 @@ function(Pikaday, earthquake, message, moment) {
     dateFields: [{
       name: 'dateFrom',
       fieldName: 'datefrom',
-      defaultValue: moment().subtract(1, 'week').format('LL')
+      defaultValue: moment().subtract(1, 'week')
     }, {
       name: 'dateTo',
       fieldName: 'dateto',
-      defaultValue: moment().format('LL')
+      defaultValue: moment()
     }],
 
     // Options for Pikaday library
@@ -56,7 +56,6 @@ function(Pikaday, earthquake, message, moment) {
     this.controls = {};
   };
 
-
   /**
    * Initializes date selector
    */
@@ -77,11 +76,8 @@ function(Pikaday, earthquake, message, moment) {
         // Sets a new selected date
         var date = self.getMoment().format('YYYY-MM-DD');
         self.dateSelected[field.name] = date;
-        // Reload earthquake data input changes
-        earthquake.query({
-          starttime: self.dateSelected.dateFrom,
-          endtime: self.dateSelected.dateTo
-        });
+        // Reload earthquake data
+        self._onDateChange();
       };
 
       // Construct options
@@ -90,7 +86,8 @@ function(Pikaday, earthquake, message, moment) {
 
       // Set a defalut value
       // datePickerOpts.defaultDate = field.defaultValue;
-      dateInput.value = field.defaultValue;
+      dateInput.value = field.defaultValue.format('LL');
+      self.dateSelected[field.name] = field.defaultValue;
 
       // Initialize date picker
       var datePicker = new Pikaday(datePickerOpts);
@@ -104,12 +101,32 @@ function(Pikaday, earthquake, message, moment) {
       self.elements.dateTo.disabled = true;
     });
 
-    // Enable inputs after query
     earthquake.doAfterQuery(function() {
+      // Enable inputs after query
       self.elements.dateFrom.disabled = false;
       self.elements.dateTo.disabled = false;
+      // Set a message with duration between selected dates
+      var diff = moment(self.dateSelected.dateFrom)
+           .diff(moment(self.dateSelected.dateTo));
+      app.log.debug(self.dateSelected.dateFrom, self.dateSelected.dateTo, diff);
+      var duration = moment.duration(diff).humanize();
+      message.set('показаны данные за ' + duration);
     });
 
+    // Quering default data range at startup
+    this._onDateChange();
+
+  };
+
+  /**
+   * On date change callback
+   */
+  DateSelectorController.prototype._onDateChange = function() {
+    // Reload earthquake data input changes
+    earthquake.query({
+      starttime: this.dateSelected.dateFrom,
+      endtime: this.dateSelected.dateTo
+    });
   };
 
   // Returns a module

@@ -15,6 +15,10 @@ html, body, .map-container {
   margin: 0;
 }
 
+body {
+  background-color: #2D2D2D;
+}
+
 /* Date selector */
 
 .date-selector {
@@ -46,6 +50,7 @@ html, body, .map-container {
 }
 
 .date-selector-form input[disabled] {
+  color: #777;
   color: rgba(0,0,0,0.35);
   cursor: progress;;
 }
@@ -67,28 +72,43 @@ html, body, .map-container {
   outline: none;
 }
 
-/* Date selector message */
+/* Application message */
 
-.date-selector-message {
+.app-message {
   position: relative;
-  right: 3px;
+  left: 2px;
   top: 4px;
 
   color: #fff;
   text-shadow: 1px 1px 1px rgba(0,0,0,0.5),
                0 0 .2em #000,
                0 0 .8em #000;
-  text-align: right;
+  text-align: left;
   font-size: .85em;
 
 }
 
-.date-selector-message.error {
-  color: #ff9f9f;
+.app-message .status-icon:after {
+  display: inline-block;
+  position: relative;
+
+  content: "\2022"; /* Bullet character */
+  font-size: 3em;
+  line-height: 0;
+
+  top: .28em;
+  left: -0.05em;
 }
 
-.date-selector-message.warning {
+.app-message.error {
+  color: #ff9f9f;
+}
+.app-message.warning {
   color: #e8d36f;
+}
+
+.app-message.progress .status-icon:after {
+  animation: blinker 1s linear infinite;
 }
 
 /* Data list (for feature popup) */
@@ -130,4 +150,10 @@ html, body, .map-container {
 
 .leaflet-popup-tip-container {
   margin-top: -1px;
+}
+
+/* Animation */
+
+@keyframes blinker {
+  50% { opacity: 0.2; }
 }
