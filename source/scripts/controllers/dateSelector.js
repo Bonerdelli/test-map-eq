@@ -74,7 +74,7 @@ function(Pikaday, earthquake, message, moment) {
       // Set callback for date select
       var onDateSelect = function() {
         // Sets a new selected date
-        var date = self.getMoment().format('YYYY-MM-DD');
+        var date = this.getMoment().format('YYYY-MM-DD');
         self.dateSelected[field.name] = date;
         // Reload earthquake data
         self._onDateChange();
@@ -110,7 +110,7 @@ function(Pikaday, earthquake, message, moment) {
            .diff(moment(self.dateSelected.dateTo));
       app.log.debug(self.dateSelected.dateFrom, self.dateSelected.dateTo, diff);
       var duration = moment.duration(diff).humanize();
-      message.set('показаны данные за ' + duration);
+      message.set('показаны данные за период в ' + duration);
     });
 
     // Quering default data range at startup
