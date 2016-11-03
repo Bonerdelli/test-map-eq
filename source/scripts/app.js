@@ -1,4 +1,4 @@
-/* globals Loader */
+/* globals document, Loader */
 
 /**
  * Application entry point
@@ -9,10 +9,11 @@
  */
 
 
-var app = (function(log) {
+var app = (function(doc, log) {
 
   var App = function() {
     Loader.call(this);
+    this.doc = doc;
     this.log = log;
   };
 
@@ -54,7 +55,7 @@ var app = (function(log) {
 
   return new App();
 
-})(console);
+})(document, console);
 
 /**
  * Initializes application

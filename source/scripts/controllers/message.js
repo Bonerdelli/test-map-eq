@@ -8,8 +8,7 @@
  * @year 2016
  */
 
-app.define('message', ['moment', 'document'],
-function(moment, doc) {
+app.define('message', [], function() {
 
   // Controller options
   var options = {
@@ -24,7 +23,7 @@ function(moment, doc) {
   var MessageController = function(options) {
     this.options = options;
     var elementId = options.elementId;
-    options.element = doc.getElementById(elementId);
+    options.element = app.doc.getElementById(elementId);
   };
 
   /**

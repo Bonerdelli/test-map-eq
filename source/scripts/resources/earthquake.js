@@ -59,7 +59,7 @@ function(promise, moment, message) {
         var data = [];
         if (error) {
           // Reject deffered promise if no data was retrieved
-          log.error('Error requesting features data', xhr.status);
+          app.log.error('Error requesting features data', xhr.status);
           message.set('ошибка загрузки данных', 'error');
         } else {
           try {
@@ -67,7 +67,7 @@ function(promise, moment, message) {
             data = JSON.parse(response);
           } catch (e) {
             // Reject deffered promise if parsing failed
-            log.error('Error parsing features data', e);
+            app.log.error('Error parsing features data', e);
             message.set('ошибка обработки данных', 'error');
           }
         }

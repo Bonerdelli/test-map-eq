@@ -8,8 +8,8 @@
  * @year 2016
  */
 
-app.define('dateSelector', ['Pikaday', 'earthquake', 'message', 'moment', 'document'],
-function(Pikaday, earthquake, message, moment, doc) {
+app.define('dateSelector', ['Pikaday', 'earthquake', 'message', 'moment'],
+function(Pikaday, earthquake, message, moment) {
 
   /**
    * Calendar controller options
@@ -63,7 +63,7 @@ function(Pikaday, earthquake, message, moment, doc) {
   DateSelectorController.prototype.initialize = function() {
 
     var self = this;
-    var dateForm = doc.getElementById(options.formElementId);
+    var dateForm = app.doc.getElementById(options.formElementId);
     var fields = this.options.dateFields || [];
 
     // Iterate on date fields and initialize them
