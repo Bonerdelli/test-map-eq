@@ -1,4 +1,4 @@
-/* globals app */
+/* globals app, define */
 'use strict';
 
 /**
@@ -8,7 +8,7 @@
  * @year 2016
  */
 
-app.define('message', [], function() {
+define('message', [], function() {
 
   // Controller options
   var options = {

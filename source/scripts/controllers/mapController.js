@@ -1,4 +1,4 @@
-/* globals app */
+/* globals app, define */
 'use strict';
 
 /**
@@ -9,7 +9,7 @@
  * @year 2016
  */
 
-app.define('map', ['L', 'HeatmapOverlay', 'earthquake', 'moment', 'message'],
+define('map', ['L', 'HeatmapOverlay', 'earthquake', 'moment', 'message'],
 function(L, HeatmapOverlay, earthquake, moment, message) {
 
   /**

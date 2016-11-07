@@ -1,4 +1,5 @@
-/* globals document, Loader */
+/* globals document, loader */
+'use strict';
 
 /**
  * Application entry point
@@ -9,17 +10,13 @@
  */
 
 
-var app = (function(doc, log) {
+var app = (function(loader, doc, log) {
 
   var App = function() {
-    Loader.call(this);
+    this.loader = loader;
     this.doc = doc;
     this.log = log;
   };
-
-  // Inherits from loader class
-  App.prototype = Object.create(Loader.prototype);
-  App.prototype.constructor = App;
 
   /**
    * A simple object extending method
@@ -46,25 +43,18 @@ var app = (function(doc, log) {
     return JSON.parse(JSON.stringify(obj));
   };
 
-  /**
-   * Register callback on module ready
-   */
-  App.prototype.onReady = function(moduleName, callback) {
-    this.onReadyCallbacks[moduleName] = callback;
-  };
-
   return new App();
 
-})(document, console);
+})(loader, document, console);
 
 /**
  * Initializes application
  */
 
-app.onReady('map', function() {
+app.loader.onReady('map', function() {
   this.initialize();
 });
 
-app.onReady('dateSelector', function() {
+app.loader.onReady('dateSelector', function() {
   this.initialize();
 });
