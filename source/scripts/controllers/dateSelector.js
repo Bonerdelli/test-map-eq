@@ -18,6 +18,9 @@ function(Pikaday, earthquake, message, moment) {
   var options = {
     formElementId: 'dateSelectorForm',
 
+    // Maximum period, in days
+    maxPeriod: 30,
+
     // Field definitions
     dateFields: [{
       name: 'dateFrom',
@@ -95,22 +98,27 @@ function(Pikaday, earthquake, message, moment) {
       self.elements[field.name] = dateInput;
     });
 
-    // Disable inputs before query
     earthquake.doBeforeQuery(function() {
+      // Sets a loading message
+      message.set('идёт загрузка данных', 'progress');
+      // Disable inputs before query
       self.elements.dateFrom.disabled = true;
       self.elements.dateTo.disabled = true;
     });
 
-    earthquake.doAfterQuery(function() {
+    earthquake.doAfterQuery(function(data) {
       // Enable inputs after query
       self.elements.dateFrom.disabled = false;
       self.elements.dateTo.disabled = false;
       // Set a message with duration between selected dates
       var diff = moment(self.dateSelected.dateFrom)
            .diff(moment(self.dateSelected.dateTo));
-      app.log.debug(self.dateSelected.dateFrom, self.dateSelected.dateTo, diff);
       var duration = moment.duration(diff).humanize();
-      message.set('показаны данные за период в ' + duration);
+      if (data && data.features && data.features.length) {
+        message.set('показаны данные за период в ' + duration);
+      } else {
+        message.set('нет данных за выбранный период', 'warning');
+      }
     });
 
     // Quering default data range at startup
@@ -122,11 +130,28 @@ function(Pikaday, earthquake, message, moment) {
    * On date change callback
    */
   DateSelectorController.prototype._onDateChange = function() {
-    // Reload earthquake data input changes
-    earthquake.query({
-      starttime: this.dateSelected.dateFrom,
-      endtime: this.dateSelected.dateTo
-    });
+
+    var dateFrom = this.dateSelected.dateFrom;
+    var dateTo = this.dateSelected.dateTo;
+    var diff = moment(dateFrom).diff(moment(dateTo));
+    var duration = moment.duration(diff);
+
+    if (duration >= 0) {
+      // Check for correct period selected
+      message.set('выбран неверный период', 'warning');
+      earthquake.clean();
+    } else if (duration.days() < -this.options.maxPeriod) {
+      // Check if date exceed maximum period
+      message.set('нет данных за выбранный период', 'warning');
+      earthquake.clean();
+    } else {
+      // All OK, reload earthquake data
+      earthquake.query({
+        starttime: dateFrom,
+        endtime: dateTo
+      });
+    }
+
   };
 
   // Returns a module

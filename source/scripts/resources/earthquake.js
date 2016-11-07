@@ -30,6 +30,7 @@ function(promise, moment, message) {
    * Messages controller constructor
    */
   var EarthquakeResource = function(options) {
+    this.data = null;
     this.options = options;
     this.beforeQueryCallbacks = [];
     this.afterQueryCallbacks = [];
@@ -39,24 +40,19 @@ function(promise, moment, message) {
    * Query data with given options
    */
   EarthquakeResource.prototype.query = function(options) {
+    var self = this;
     var queryOptions = {};
     var url = this.options.apiUrl;
     var deffered = new promise.Promise();
     // Apply callbacks
-    if (this.beforeQueryCallbacks.length) {
-      this.beforeQueryCallbacks.forEach(function(callback) {
-        callback();
-      });
-    }
+    this._beforeQuery();
     // Generate options for query
     options = options || {};
     app.extend(queryOptions, this.options.defaultQueryOptions);
     app.extend(queryOptions, options);
     // Quering API with a given options
-    var self = this;
     promise.get(url, queryOptions).then(
       function(error, response, xhr) {
-        var data = [];
         if (error) {
           // Reject deffered promise if no data was retrieved
           app.log.error('Error requesting features data', xhr.status);
@@ -64,25 +60,29 @@ function(promise, moment, message) {
         } else {
           try {
             // Trying parse JSON response
-            data = JSON.parse(response);
+            self.data = JSON.parse(response);
           } catch (e) {
             // Reject deffered promise if parsing failed
             app.log.error('Error parsing features data', e);
             message.set('произошла ошибка обработки данных', 'error');
           }
         }
-        // Resolve promise
-        deffered.done(data);
         // Apply callbacks
-        if (self.afterQueryCallbacks.length) {
-          self.afterQueryCallbacks.forEach(function(callback) {
-            callback(data);
-          });
-        }
+        self._afterQuery();
+        // Resolve promise
+        deffered.done(self.data);
       }
     );
     // Returns deffered promise
     return deffered;
+  };
+
+  /**
+   * Clear last quried data
+   */
+  EarthquakeResource.prototype.clean = function() {
+    this.data = null;
+    this._afterQuery();
   };
 
   /**
@@ -98,6 +98,30 @@ function(promise, moment, message) {
   EarthquakeResource.prototype.doAfterQuery = function(callback) {
     this.afterQueryCallbacks.push(callback);
   };
+
+  /**
+   * Execute before query callbacks
+   */
+  EarthquakeResource.prototype._beforeQuery = function() {
+    if (this.beforeQueryCallbacks.length) {
+      this.beforeQueryCallbacks.forEach(function(callback) {
+        callback();
+      });
+    }
+  };
+
+  /**
+   * Execute after query callbacks
+   */
+  EarthquakeResource.prototype._afterQuery = function() {
+    var data = this.data;
+    if (this.afterQueryCallbacks.length) {
+      this.afterQueryCallbacks.forEach(function(callback) {
+        callback(data);
+      });
+    }
+  };
+
 
   // Returns an EarthquakeResource instance
   return new EarthquakeResource(options);

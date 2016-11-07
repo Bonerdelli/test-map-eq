@@ -103,11 +103,6 @@ function(L, HeatmapOverlay, earthquake, moment, message) {
       }
     }).addTo(map);
 
-    // Sets a loading message
-    earthquake.doBeforeQuery(function() {
-      message.set('идёт загрузка данных', 'progress');
-    });
-
     // Parse earthquake query response
     earthquake.doAfterQuery(function(data) {
       if (data && data.features && data.features.length) {
@@ -194,7 +189,9 @@ function(L, HeatmapOverlay, earthquake, moment, message) {
    */
   MapController.prototype.cleanData = function() {
     this.pointsLayer.clearLayers();
-    this.heatmapLayer.setData([]);
+    this.heatmapLayer.setData({
+      data: []
+    });
   };
 
   // Returns a module
