@@ -1,6 +1,6 @@
 /**
  * Styles for earthquake map
- * TODO: make with preprocessor
+ * NOTE: maked without preprocessor due low complexity
  * @author Andrei Nekrasov <avnk@yandex.ru>
  * @package avnk-testwork-earthquake-map
  * @year 2016
@@ -15,8 +15,16 @@ html, body, .map-container {
   margin: 0;
 }
 
+/* Base styles */
+
+
 body {
   background-color: #2D2D2D;
+}
+
+abbr[title] {
+  border-bottom: 1px rgba(0,0,0,0.3) dotted;
+  text-decoration: none;
 }
 
 /* Date selector */
@@ -140,7 +148,23 @@ body {
   height: 3px;
 }
 
-/* Leaflet map style overrides */
+/* Date selector default style overrides */
+
+.pika-button:hover {
+  background-color: #e2e2e2;
+  color: #000;
+}
+
+.pika-table th {
+  color: #000;
+}
+
+.pika-table th abbr {
+  border-bottom: none;
+  cursor: default;
+}
+
+/* Leaflet map default style overrides */
 
 .leaflet-container {
   background-color: #2D2D2D;

@@ -36,7 +36,7 @@ function(Pikaday, earthquake, message, moment) {
       format: 'LL',
       maxDate: moment().toDate(),
       firstDay: 1,
-      i18n: {
+      i18n: { // Localization
         previousMonth: 'Пред. месяц',
         nextMonth: 'След. месяц',
         months: ['Январь','Февраль','Март','Апрель','Май','Июнь',
@@ -115,7 +115,7 @@ function(Pikaday, earthquake, message, moment) {
            .diff(moment(self.dateSelected.dateTo, dateValueFormat));
       var duration = moment.duration(diff).humanize();
       if (data && data.features && data.features.length) {
-        message.set('показаны данные за период в ' + duration);
+        message.set('показаны данные за ' + duration);
       } else {
         message.set('нет данных за выбранный период', 'warning');
       }
