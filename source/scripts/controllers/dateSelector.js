@@ -16,11 +16,10 @@ function(Pikaday, earthquake, message, moment) {
    * NOTE: this example doesn't need for global configuration
    */
   var options = {
+    maxPeriod: 30, // Maximum period, in days
     formElementId: 'dateSelectorForm',
-
-    // Maximum period, in days
-    maxPeriod: 30,
-
+    dateValueFormat: 'YYYY-MM-DD',
+    dateDisplayFormat: 'LL',
     // Field definitions
     dateFields: [{
       name: 'dateFrom',
@@ -65,6 +64,7 @@ function(Pikaday, earthquake, message, moment) {
   DateSelectorController.prototype.initialize = function() {
 
     var self = this;
+    var dateValueFormat = this.options.dateValueFormat;
     var dateForm = app.doc.getElementById(options.formElementId);
     var fields = this.options.dateFields || [];
 
@@ -77,7 +77,7 @@ function(Pikaday, earthquake, message, moment) {
       // Set callback for date select
       var onDateSelect = function() {
         // Sets a new selected date
-        var date = this.getMoment().format('YYYY-MM-DD');
+        var date = this.getMoment().format(dateValueFormat);
         self.dateSelected[field.name] = date;
         // Reload earthquake data
         self._onDateChange();
@@ -89,8 +89,8 @@ function(Pikaday, earthquake, message, moment) {
 
       // Set a defalut value
       // datePickerOpts.defaultDate = field.defaultValue;
-      dateInput.value = field.defaultValue.format('LL');
-      self.dateSelected[field.name] = field.defaultValue;
+      dateInput.value = field.defaultValue.format(self.options.dateDisplayFormat);
+      self.dateSelected[field.name] = field.defaultValue.format(dateValueFormat);
 
       // Initialize date picker
       var datePicker = new Pikaday(datePickerOpts);
@@ -111,8 +111,8 @@ function(Pikaday, earthquake, message, moment) {
       self.elements.dateFrom.disabled = false;
       self.elements.dateTo.disabled = false;
       // Set a message with duration between selected dates
-      var diff = moment(self.dateSelected.dateFrom)
-           .diff(moment(self.dateSelected.dateTo));
+      var diff = moment(self.dateSelected.dateFrom, dateValueFormat)
+           .diff(moment(self.dateSelected.dateTo, dateValueFormat));
       var duration = moment.duration(diff).humanize();
       if (data && data.features && data.features.length) {
         message.set('показаны данные за период в ' + duration);
@@ -131,9 +131,11 @@ function(Pikaday, earthquake, message, moment) {
    */
   DateSelectorController.prototype._onDateChange = function() {
 
+    var format = this.options.dateValueFormat;
     var dateFrom = this.dateSelected.dateFrom;
     var dateTo = this.dateSelected.dateTo;
-    var diff = moment(dateFrom).diff(moment(dateTo));
+    var diff = moment(dateFrom, format)
+         .diff(moment(dateTo, format));
     var duration = moment.duration(diff);
 
     if (duration >= 0) {
