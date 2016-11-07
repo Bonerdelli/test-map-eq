@@ -32,8 +32,7 @@ function(promise, moment, message) {
   var EarthquakeResource = function(options) {
     this.data = null;
     this.options = options;
-    this.beforeQueryCallbacks = [];
-    this.afterQueryCallbacks = [];
+    this.callbacks = {};
   };
 
   /**
@@ -45,7 +44,7 @@ function(promise, moment, message) {
     var url = this.options.apiUrl;
     var deffered = new promise.Promise();
     // Apply callbacks
-    this._beforeQuery();
+    this._execCallbacks('beforeQuery');
     // Generate options for query
     options = options || {};
     app.extend(queryOptions, this.options.defaultQueryOptions);
@@ -68,7 +67,7 @@ function(promise, moment, message) {
           }
         }
         // Apply callbacks
-        self._afterQuery();
+        self._execCallbacks('afterQuery');
         // Resolve promise
         deffered.done(self.data);
       }
@@ -81,47 +80,32 @@ function(promise, moment, message) {
    * Clear last quried data
    */
   EarthquakeResource.prototype.clean = function() {
+    this._execCallbacks('afterClean');
     this.data = null;
-    this._afterQuery();
   };
 
   /**
-   * Register callback that triggered before query starts
+   * Register callback method for an event
    */
-  EarthquakeResource.prototype.doBeforeQuery = function(callback) {
-    this.beforeQueryCallbacks.push(callback);
-  };
-
-  /**
-   * Register callback that triggered after query completes
-   */
-  EarthquakeResource.prototype.doAfterQuery = function(callback) {
-    this.afterQueryCallbacks.push(callback);
-  };
-
-  /**
-   * Execute before query callbacks
-   */
-  EarthquakeResource.prototype._beforeQuery = function() {
-    if (this.beforeQueryCallbacks.length) {
-      this.beforeQueryCallbacks.forEach(function(callback) {
-        callback();
-      });
+  EarthquakeResource.prototype.on = function(eventName, callback) {
+    if (this.callbacks[eventName] === undefined) {
+      this.callbacks[eventName] = [callback];
+    } else {
+      this.callbacks[eventName].push(callback);
     }
   };
 
   /**
-   * Execute after query callbacks
+   * Execute callbacks for event
    */
-  EarthquakeResource.prototype._afterQuery = function() {
+  EarthquakeResource.prototype._execCallbacks = function(eventName) {
     var data = this.data;
-    if (this.afterQueryCallbacks.length) {
-      this.afterQueryCallbacks.forEach(function(callback) {
+    if (this.callbacks[eventName] && this.callbacks[eventName].length) {
+      this.callbacks[eventName].forEach(function(callback) {
         callback(data);
       });
     }
   };
-
 
   // Returns an EarthquakeResource instance
   return new EarthquakeResource(options);

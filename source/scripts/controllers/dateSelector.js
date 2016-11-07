@@ -98,7 +98,7 @@ function(Pikaday, earthquake, message, moment) {
       self.elements[field.name] = dateInput;
     });
 
-    earthquake.doBeforeQuery(function() {
+    earthquake.on('beforeQuery', function() {
       // Sets a loading message
       message.set('идёт загрузка данных', 'progress');
       // Disable inputs before query
@@ -106,7 +106,7 @@ function(Pikaday, earthquake, message, moment) {
       self.elements.dateTo.disabled = true;
     });
 
-    earthquake.doAfterQuery(function(data) {
+    earthquake.on('afterQuery', function(data) {
       // Enable inputs after query
       self.elements.dateFrom.disabled = false;
       self.elements.dateTo.disabled = false;
@@ -136,13 +136,13 @@ function(Pikaday, earthquake, message, moment) {
     var dateTo = this.dateSelected.dateTo;
     var diff = moment(dateFrom, format)
          .diff(moment(dateTo, format));
-    var duration = moment.duration(diff);
+    var daysCount = moment.duration(diff).days();
 
-    if (duration >= 0) {
+    if (daysCount >= 0) {
       // Check for correct period selected
       message.set('выбран неверный период', 'warning');
       earthquake.clean();
-    } else if (duration.days() < -this.options.maxPeriod) {
+    } else if (daysCount < -this.options.maxPeriod) {
       // Check if date exceed maximum period
       message.set('нет данных за выбранный период', 'warning');
       earthquake.clean();

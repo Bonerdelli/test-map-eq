@@ -104,7 +104,7 @@ function(L, HeatmapOverlay, earthquake, moment, message) {
     }).addTo(map);
 
     // Parse earthquake query response
-    earthquake.doAfterQuery(function(data) {
+    earthquake.on('afterQuery', function(data) {
       if (data && data.features && data.features.length) {
         app.log.info('Retrieved features count:', data.features.length);
         // Set a new features data
@@ -113,6 +113,11 @@ function(L, HeatmapOverlay, earthquake, moment, message) {
         // Clean if no data was retrieved
         self.cleanData();
       }
+    });
+
+    // Do clean when data source was cleaned
+    earthquake.on('afterClean', function() {
+      self.cleanData();
     });
 
     this.heatmapLayer = heatmapLayer;
