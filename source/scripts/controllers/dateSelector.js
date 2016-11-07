@@ -136,7 +136,10 @@ function(Pikaday, earthquake, message, moment) {
     var dateTo = this.dateSelected.dateTo;
     var diff = moment(dateFrom, format)
          .diff(moment(dateTo, format));
-    var daysCount = moment.duration(diff).days();
+    var duration = moment.duration(diff);
+    var monthsCount = duration.months();
+    var daysCount = duration.days();
+    daysCount += monthsCount * 30;
 
     if (daysCount >= 0) {
       // Check for correct period selected
@@ -144,7 +147,7 @@ function(Pikaday, earthquake, message, moment) {
       earthquake.clean();
     } else if (daysCount < -this.options.maxPeriod) {
       // Check if date exceed maximum period
-      message.set('нет данных за выбранный период', 'warning');
+      message.set('выбран слишком большой период', 'warning');
       earthquake.clean();
     } else {
       // All OK, reload earthquake data
