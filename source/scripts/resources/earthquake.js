@@ -3,7 +3,7 @@
 
 /**
  * Resource for quering earthquake data from http://earthquake.usgs.gov
- * @author Andrei Nekrasov <avnk@yandex.ru>
+ * @author Andrei Nekrasov <bonerdelli@gmail.com>
  * @package avnk-testwork-earthquake-map
  * @year 2016
  */

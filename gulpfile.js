@@ -1,6 +1,6 @@
 /**
  * Common web project build tasks for a gulp package
- * @author Andrei Nekrasov <avnk@yandex.ru>
+ * @author Andrei Nekrasov <bonerdelli@gmail.com>
  * @version 1.6.0
  */
 

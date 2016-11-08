@@ -3,7 +3,7 @@
 
 /**
  * Controller for date range selection
- * @author Andrei Nekrasov <avnk@yandex.ru>
+ * @author Andrei Nekrasov <bonerdelli@gmail.com>
  * @package avnk-testwork-earthquake-map
  * @year 2016
  */

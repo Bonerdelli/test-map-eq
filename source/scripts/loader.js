@@ -4,7 +4,7 @@
 /**
  * Standalone asynchronous modules loader for browser
  * AMD-like realization, but less complicated
- * @author Andrei Nekrasov <avnk@yandex.ru>
+ * @author Andrei Nekrasov <bonerdelli@gmail.com>
  * @package avnk-testwork-earthquake-map
  * @year 2016
  */

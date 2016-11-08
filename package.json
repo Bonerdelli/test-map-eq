@@ -3,7 +3,7 @@
   "version": "0.6.0",
   "description": "Test work for scanex.ru, part 2",
   "main": "app.js",
-  "author": "Andrei Nekrasov <avnk@yandex.ru>",
+  "author": "Andrei Nekrasov <bonerdelli@gmail.com>",
   "private": true,
   "license": "MIT",
   "dependencies": {

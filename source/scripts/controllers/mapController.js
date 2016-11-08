@@ -4,7 +4,7 @@
 /**
  * Controller for displaying earthquakes on a map
  * Uses Leaflet map library and MapBox as tile source
- * @author Andrei Nekrasov <avnk@yandex.ru>
+ * @author Andrei Nekrasov <bonerdelli@gmail.com>
  * @package avnk-testwork-earthquake-map
  * @year 2016
  */
