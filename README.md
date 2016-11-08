@@ -1,8 +1,8 @@
 Earthquakes map
 ===============
 
-Interactive map for displaying earthquakes data
-Working example you can find here
+Interactive map for displaying earthquakes data.
+Working example you can find here.
 
 Key features
 ------------
