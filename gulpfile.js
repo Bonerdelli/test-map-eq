@@ -38,8 +38,7 @@ var path = {
     less:   'source/styles/**/*.less',
     img:    'source/images/**/*.+(jpg|jpeg|png|gif|svg)',
     js:     'source/scripts/**/*.js',
-    assets: 'source/assets/*',
-    json:   './package.json'
+    assets: 'source/assets/*'
   },
   target: {
     assets: 'source/vendor/',
@@ -47,17 +46,14 @@ var path = {
     css:    'source/build/css/'
   },
   build: {
-    root:   'dist',
-    sync:   'dist/**',
-    node:   'dist/server/',
-    yml:    'dist/config/',
-    html:   'dist/public/',
-    js:     'dist/public/js/',
-    css:    'dist/public/css/',
-    img:    'dist/public/images/',
-    fonts:  'dist/public/fonts/',
-    assets: 'dist/public',
-    json:   'dist/'
+    root:   'docs',
+    sync:   'docs/**',
+    html:   'docs/',
+    js:     'docs/js/',
+    css:    'docs/css/',
+    img:    'docs/images/',
+    fonts:  'docs/fonts/',
+    assets: 'docs/'
   },
   watch: {
     html:   'source/*.html',
@@ -84,7 +80,6 @@ var path = {
     ]
   },
   clean: [
-    'dist',
     'source/vendor',
     'source/styles/vendor/',
     'source/fonts',
@@ -204,22 +199,6 @@ function copyDistAssets() {
     .pipe(gulp.dest(path.build.assets));
 }
 
-function copyDistConfig() {
-  return gulp.src(path.source.yml)
-    .pipe(gulp.dest(path.build.yml));
-}
-
-function copyDistJson() {
-  return gulp.src(path.source.json)
-    .pipe(gulp.dest(path.build.json));
-}
-
-function buildNodeApp() {
-  return gulp.src(path.source.node)
-    .pipe(buildJsPipe())
-    .pipe(gulp.dest(path.build.node));
-}
-
 /**
  * Serve delelopment server
  */
@@ -286,19 +265,13 @@ gulp.task('build:less', gulp.series(
   copyAssetsLess, buildLess
 ));
 
-gulp.task('build:dist', gulp.parallel(
-  copyDistConfig, buildNodeApp
-));
-
 gulp.task('copy', gulp.parallel(
   copyAssetsJs, copyAssetsCss, copyFonts,
-  copyDistImages, copyDistAssets, copyDistJson
+  copyDistImages, copyDistAssets
 ));
 
 gulp.task('build', gulp.series(
-  'clean', 'copy', 'build:less', gulp.parallel(
-    buildHtml, 'build:dist'
-  )
+  'clean', 'copy', 'build:less', buildHtml
 ));
 
 gulp.task('serve', gulp.series(

@@ -4,6 +4,3 @@ node_modules/
 source/build/
 source/vendor/
 source/styles/vendor/
-
-dist/
-temp/
