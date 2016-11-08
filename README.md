@@ -2,7 +2,7 @@ Earthquakes map
 ===============
 
 Interactive map for displaying earthquakes data.
-Working example you can find here.
+Working example you can find [here]: https://bonerdelli.github.io/test-map-eq/.
 
 Key features
 ------------
