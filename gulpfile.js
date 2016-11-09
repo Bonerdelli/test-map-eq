@@ -100,9 +100,7 @@ var opts = {
     conservativeCollapse: false
   },
   uglifyJs: {
-    compress: {
-      global_defs: [],
-    }
+
   }
 };
 
