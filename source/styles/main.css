@@ -104,10 +104,11 @@ abbr[title] {
   display: inline-block;
   position: relative;
 
-  content: "\2022"; /* Bullet character */
-  font-size: 3em;
-  line-height: 0;
+  content: "\00B7";
+  transform: scale(5);
 
+  margin-right: 0.6em;
+  left: .3em;
   top: .28em;
 }
 
