@@ -16,7 +16,7 @@ function(promise, moment, message) {
    * NOTE: this example doesn't need for global configuration
    */
   var options = {
-    apiUrl: 'http://earthquake.usgs.gov/fdsnws/event/1/query',
+    apiUrl: 'https://earthquake.usgs.gov/fdsnws/event/1/query',
     defaultQueryOptions: {
       format:    'geojson',
       eventtype: 'earthquake',
