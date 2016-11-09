@@ -104,12 +104,10 @@ abbr[title] {
   display: inline-block;
   position: relative;
 
-  content: "\00B7";
-  transform: scale(5);
-
-  margin-right: 0.6em;
-  left: .3em;
-  top: .28em;
+  content: "\25cf";
+  -webkit-transform: scale(1.4);
+  margin-right: .2em;
+  left: .1em;
 }
 
 .app-message.error {
