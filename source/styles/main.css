@@ -68,10 +68,14 @@ abbr[title] {
 .date-selector-form input[type=text]:first-child {
   border-top-left-radius: 4px;
   border-bottom-left-radius: 4px;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .date-selector-form input[type=text]:last-child {
   border-right: 1px solid #ccc;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;  
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
