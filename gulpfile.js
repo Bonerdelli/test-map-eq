@@ -5,7 +5,6 @@
  */
 
 var gulp = require('gulp');
-var gutil = require('gulp-util');
 var flatten = require('gulp-flatten');
 var gulpif = require('gulp-if');
 var lazypipe = require('lazypipe');
@@ -15,12 +14,10 @@ var less = require('gulp-less');
 var uglify = require('gulp-uglify');
 var csso = require('gulp-csso');
 
-var nodemon = require('gulp-nodemon');
 var autoprefixer = require('gulp-autoprefixer');
 var sourcemaps = require('gulp-sourcemaps');
 var htmlMin = require('gulp-htmlmin');
 var useref = require('gulp-useref');
-var env = require('gulp-env');
 
 // TODO: use it nice things
 // var cached = require('gulp-cached');
@@ -32,13 +29,11 @@ var env = require('gulp-env');
 
 var path = {
   source: {
-    node:   'server/**/*.js',
-    yml:    'config/**/*.yml',
     html:   'source/*.html',
+    assets: 'source/assets/*',
     less:   'source/styles/**/*.less',
     img:    'source/images/**/*.+(jpg|jpeg|png|gif|svg)',
     js:     'source/scripts/**/*.js',
-    assets: 'source/assets/*'
   },
   target: {
     assets: 'source/vendor/',
@@ -73,7 +68,7 @@ var path = {
       'bower_components/**/*.css',
     ],
     img: [
-      'bower_components/openlayers*/theme/**/*'
+
     ],
     fonts: [
       'bower_components/*/fonts/*'
@@ -93,7 +88,7 @@ var path = {
 
 var opts = {
   env: 'develop',
-  version: '0.7.0',
+  version: '0.7.1',
   autoprefixer: [
     'last 1 version',
     '> 1%'
@@ -108,12 +103,6 @@ var opts = {
     compress: {
       global_defs: [],
     }
-  },
-  devServer: {
-    startFile:  'server/app.js',
-  },
-  server: {
-    startFile:  'dist/server/app.js',
   }
 };
 
@@ -161,21 +150,6 @@ function copyFonts() {
  * Main build tasks
  */
 
-function buildLess() {
-  return gulp.src(path.source.less)
-    .pipe(sourcemaps.init())
-      .pipe(less())
-    .pipe(sourcemaps.write())
-    .pipe(gulp.dest(path.target.css));
-}
-
-function buildJs() {
-  return gulp.src(path.source.html)
-    .pipe(useref())
-      .pipe(gulpif('**/*.js', buildJsPipe()))
-    .pipe(gulp.dest(path.build.html));
-}
-
 function buildHtml() {
   return gulp.src(path.source.html)
     .pipe(useref())
@@ -183,6 +157,14 @@ function buildHtml() {
       .pipe(gulpif('**/*.js',   buildJsPipe()))
       .pipe(gulpif('**/*.html', htmlMin(opts.htmlMin)))
     .pipe(gulp.dest(path.build.html));
+}
+
+function buildLess() {
+  return gulp.src(path.source.less)
+    .pipe(sourcemaps.init())
+      .pipe(less())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(path.target.css));
 }
 
 /**
@@ -197,56 +179,6 @@ function copyDistImages() {
 function copyDistAssets() {
   return gulp.src(path.source.assets)
     .pipe(gulp.dest(path.build.assets));
-}
-
-/**
- * Serve delelopment server
- */
-
-function setDevEnv(cb) {
-  env({ vars: {
-    // TODO: why not .env.env.env.env?
-    env: gutil.env.env || opts.env
-  }});
-  cb();
-}
-
-function serveDev() {
-  nodemon({
-    script: opts.devServer.startFile,
-    ext: false,
-    watch: false
-  });
-}
-
-/**
- * Serve builded for pruduction server
- */
-
-function setDistEnv(cb) {
-  env({ vars: {
-    // TODO: why not .env.env.env.env?
-    env: gutil.env.env || 'production'
-  }});
-  cb();
-}
-
-function serveDist() {
-  nodemon({
-    script: opts.server.startFile,
-    ext: false,
-    watch: false
-  });
-}
-
-/**
- * Watchers
- */
-
-function watch() {
-  gulp.watch(path.watch.less, buildLess);
-  gulp.watch(path.watch.html, buildHtml);
-  gulp.watch(path.watch.js,   buildJs);
 }
 
 /**
@@ -274,20 +206,10 @@ gulp.task('build', gulp.series(
   'clean', 'copy', 'build:less', buildHtml
 ));
 
-gulp.task('serve', gulp.series(
-  setDevEnv, serveDev
-));
-
-gulp.task('serve:dist', gulp.series(
-  setDistEnv, serveDist
-));
-
 /**
  * Default task
  */
 
 gulp.task('default', gulp.series(
-  'clean', 'build', gulp.parallel(
-    watch, 'serve'
-  )
+  'clean', 'build'
 ));
