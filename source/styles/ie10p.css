@@ -1,0 +1,10 @@
+/* Special fixes for special browser */
+
+@media all and (-ms-high-contrast: none), (-ms-high-contrast: active) {
+  .app-message {
+    clear: both;
+  }
+  .is-bound.pika-single {
+    margin-left: 16px;
+  }
+}
